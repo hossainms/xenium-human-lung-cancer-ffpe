@@ -1,0 +1,26 @@
+# Private Claude Code files
+CLAUDE.md
+.claude/
+
+# Private working files
+SPEAKER_NOTES.md
+manuscript_*.txt
+manuscript_*.md
+manuscript_*.docx
+*Guidelines*.pdf
+
+# Raw / large data (download locally, never commit)
+data/
+*.zip
+*.parquet
+*.zarr/
+*.zarr.zip
+*.h5
+*.h5ad
+*.ome.tif
+*.tif
+*.csv.gz
+
+# Python
+__pycache__/
+.ipynb_checkpoints/

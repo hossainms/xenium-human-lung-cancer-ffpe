@@ -143,7 +143,7 @@ Design, analysis, code and interpretation: **MD Shakhaowat Hossain**, PhD Candid
 
 If you use this analysis or its code, please cite it (GitHub's "Cite this repository" button reads `CITATION.cff`):
 
-> Hossain, MD Shakhaowat (2026). *Xenium human lung cancer (FFPE): spatial analysis of the tumour immune microenvironment*. Version 1.0.0. https://github.com/hossainms/xenium-human-lung-cancer-ffpe
+> Hossain, M. S. (2026). *Xenium human lung cancer (FFPE): Spatial analysis of the tumour immune microenvironment* (Version 1.1.0) [Computer software]. GitHub. https://github.com/hossainms/xenium-human-lung-cancer-ffpe
 
 and cite the datasets and methods listed above.
 

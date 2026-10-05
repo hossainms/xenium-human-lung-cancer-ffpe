@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ist-analysis"
-version = "1.0.0"
+version = "1.1.0"
 description = "Analysis functions for imaging-based spatial transcriptomics (iST), applied to a 10x Xenium human lung cancer dataset"
 readme = "README.md"
 license = "MIT"

@@ -22,4 +22,4 @@ reference  reference mapping to the Lung Cancer Atlas (LuCA)
 domains    spatial domains (BANKSY, CellCharter), spillover filter, paired pseudobulk DE
 """
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"

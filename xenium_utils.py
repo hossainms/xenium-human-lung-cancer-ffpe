@@ -22,7 +22,7 @@ PROCESSED_DIR = DATA_ROOT / "processed"
 HE_PATH = SAMPLE_DIR / f"{SAMPLE}_he_image.ome.tif"
 HE_ALIGNMENT_PATH = SAMPLE_DIR / f"{SAMPLE}_he_imagealignment.csv"
 
-# Outputs of the core workflow (humnan_lung_cancer_workflow.ipynb), by step
+# Outputs of the core workflow (human_lung_cancer_workflow.ipynb), by step
 STEP_FILES = {
     "qc": PROCESSED_DIR / f"{SAMPLE}_qc.h5ad",                  # Step 4: QC-filtered cells
     "clustered": PROCESSED_DIR / f"{SAMPLE}_clustered.h5ad",    # Step 5: clusters, UMAP

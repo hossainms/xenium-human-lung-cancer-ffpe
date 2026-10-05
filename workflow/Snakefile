@@ -56,7 +56,7 @@ rule core:
         flag("spatial_stats"),
 
 
-# ---- Core workflow (notebook humnan_lung_cancer_workflow.ipynb, Steps 1-10) ------------------------
+# ---- Core workflow (notebook human_lung_cancer_workflow.ipynb, Steps 1-10) ------------------------
 
 rule download:
     output:

@@ -60,7 +60,7 @@ def viewer_data(out: Path) -> dict:
     names = dict(CELL_SETS)
     vc = VitessceConfig(schema_version="1.0.16", name="Xenium human lung cancer FFPE: 139,129 cells",
                         description="High-confidence cells; colour by cell set or by gene (lognormalised counts). "
-                                    "Analysis by MD Shakhaowat Hossain, Tulane University School of Medicine.")
+                                    "Analysis by MD Shakhaowat Hossain, PhD Candidate, Loren Gragert Lab, Tulane University School of Medicine.")
     ds = vc.add_dataset(name="Xenium lung cancer").add_object(AnnDataWrapper(
         adata_url=f"{SITE_URL}/viewer/cells.zarr", obs_spots_path="obsm/spatial",
         obs_embedding_paths=["obsm/X_umap"], obs_embedding_names=["UMAP"],

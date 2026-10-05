@@ -1,6 +1,6 @@
 # Xenium human lung cancer (FFPE): spatial analysis of the tumour immune microenvironment
 
-**MD Shakhaowat Hossain** · Graduate Researcher, Tulane University School of Medicine
+**MD Shakhaowat Hossain** · PhD Candidate, Loren Gragert Lab, Tulane University School of Medicine
 
 [![CI](https://github.com/hossainms/xenium-human-lung-cancer-ffpe/actions/workflows/ci.yml/badge.svg)](https://github.com/hossainms/xenium-human-lung-cancer-ffpe/actions/workflows/ci.yml)
 ![Python 3.12](https://img.shields.io/badge/python-3.12-blue) ![Snakemake 9](https://img.shields.io/badge/snakemake-9-green) ![Licence: MIT + CC BY 4.0](https://img.shields.io/badge/licence-MIT%20%2B%20CC%20BY%204.0-lightgrey)
@@ -136,7 +136,7 @@ Methods used and cited: Proseg (Jones et al., *Nature Methods* 2025), BANKSY (Si
 
 ## Author and citation
 
-Design, analysis, code and interpretation: **MD Shakhaowat Hossain**, Graduate Researcher, Tulane University School of Medicine.
+Design, analysis, code and interpretation: **MD Shakhaowat Hossain**, PhD Candidate, Loren Gragert Lab, Tulane University School of Medicine.
 
 If you use this analysis or its code, please cite it (GitHub's "Cite this repository" button reads `CITATION.cff`):
 

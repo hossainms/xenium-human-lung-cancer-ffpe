@@ -136,8 +136,8 @@ Raw data and results are never stored in this repository; the pipeline downloads
 
 | Dataset | Source | Licence |
 |---|---|---|
-| Xenium Human Lung Cancer FFPE (Xenium v1, Human Multi-Tissue and Cancer panel) | 10x Genomics, public datasets | CC BY 4.0 |
-| Lung Cancer Atlas (LuCA), core atlas | Salcher et al., *Cancer Cell* 2022, via CELLxGENE | CC BY 4.0 |
+| [Xenium Human Lung Cancer FFPE](https://www.10xgenomics.com/datasets/preview-data-ffpe-human-lung-cancer-with-xenium-multimodal-cell-segmentation-1-standard) (Xenium v1, Human Multi-Tissue and Cancer panel; adult lung adenocarcinoma) | 10x Genomics, public datasets | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| Lung Cancer Atlas (LuCA), core atlas | [Salcher et al., *Cancer Cell* 2022](https://doi.org/10.1016/j.ccell.2022.10.008), via CELLxGENE | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
 
 Methods used and cited: Proseg (Jones et al., *Nature Methods* 2025), BANKSY (Singhal et al., *Nature Genetics* 2024), CellCharter (Varrone et al., *Nature Genetics* 2024), CellTypist (Dominguez Conde et al., *Science* 2022), squidpy (Palla et al., *Nature Methods* 2022), scanpy, spatialdata, PyDESeq2, and in R: Seurat, SpatialExperiment, imcRtools, Banksy, SingleR, CellChat, spatstat. See `CITATION.cff`.
 

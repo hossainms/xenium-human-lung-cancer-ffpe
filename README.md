@@ -151,6 +151,8 @@ If you use this analysis or its code, please cite it (GitHub's "Cite this reposi
 
 and cite the datasets and methods listed above.
 
+**Using this work?** I would be glad to hear how you are applying the analysis or code, and happy to answer questions or discuss related ideas. Feel free to reach out at [shakhaowatdu@gmail.com](mailto:shakhaowatdu@gmail.com).
+
 ## Licence
 
 © 2026 MD Shakhaowat Hossain. Code: MIT (`LICENSE`). Text, figures and result tables: CC BY 4.0 (`LICENSE-CC-BY-4.0.md`). The datasets keep their own licences (above).

@@ -1,0 +1,60 @@
+cff-version: 1.2.0
+message: "If you use this analysis or its code, please cite it as below, and cite the datasets and methods it builds on."
+title: "Xenium human lung cancer (FFPE): spatial analysis of the tumour immune microenvironment"
+type: software
+authors:
+  - family-names: Hossain
+    given-names: MD Shakhaowat
+    affiliation: Tulane University School of Medicine
+license: MIT
+repository-code: "https://github.com/hossainms/xenium-human-lung-cancer-ffpe"
+keywords:
+  - spatial transcriptomics
+  - Xenium
+  - tumour immune microenvironment
+  - lung cancer
+  - Snakemake
+references:
+  - type: data
+    title: "Xenium Human Lung Cancer FFPE (Xenium v1, Human Multi-Tissue and Cancer panel)"
+    authors:
+      - name: 10x Genomics
+    url: "https://www.10xgenomics.com/datasets"
+    license: CC-BY-4.0
+  - type: article
+    title: "High-resolution single-cell atlas reveals diversity and plasticity of tumor-associated neutrophils in non-small cell lung cancer"
+    authors:
+      - family-names: Salcher
+        given-names: Stefan
+    journal: Cancer Cell
+    year: 2022
+    doi: 10.1016/j.ccell.2022.10.008
+  - type: article
+    title: "Proseg: probabilistic cell segmentation for in situ spatial transcriptomics"
+    authors:
+      - family-names: Jones
+        given-names: Daniel C.
+    journal: Nature Methods
+    year: 2025
+  - type: article
+    title: "BANKSY unifies cell typing and tissue domain segmentation for scalable spatial omics data analysis"
+    authors:
+      - family-names: Singhal
+        given-names: Vipul
+    journal: Nature Genetics
+    year: 2024
+  - type: article
+    title: "CellCharter reveals spatial cell niches associated with tissue remodeling and cell plasticity"
+    authors:
+      - family-names: Varrone
+        given-names: Marco
+    journal: Nature Genetics
+    year: 2024
+  - type: article
+    title: "Squidpy: a scalable framework for spatial omics analysis"
+    authors:
+      - family-names: Palla
+        given-names: Giovanni
+    journal: Nature Methods
+    year: 2022
+    doi: 10.1038/s41592-021-01358-2

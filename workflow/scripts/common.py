@@ -1,6 +1,6 @@
 """Shared helpers for the pipeline scripts.
 
-Every script is a small command-line program:
+Every script is a thin command-line wrapper around the ist_analysis package:
 
     python workflow/scripts/<step>.py --config config/config.yaml [--input ... --output ...]
 
@@ -20,8 +20,10 @@ from pathlib import Path
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(REPO_ROOT))   # xenium_utils.py lives at the repository root
-import xenium_utils as xu  # noqa: E402
+if str(REPO_ROOT) not in sys.path:   # the ist_analysis package, if it is not installed (pip install -e .)
+    sys.path.insert(0, str(REPO_ROOT))
+from ist_analysis import utils as xu  # noqa: E402
+from ist_analysis.utils import mad_bounds  # noqa: E402,F401  (re-exported for the scripts)
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -90,12 +92,3 @@ class Step:
             self.say(f"  output  {xu.display_path(p)}")
         self.say(f"== done in {time.time() - self.t0:.0f} s")
 
-
-def mad_bounds(x, nmads: float):
-    """Median +/- nmads * MAD on the log1p scale, returned on the original scale."""
-    import numpy as np
-
-    lx = np.log1p(x)
-    med = np.median(lx)
-    mad = 1.4826 * np.median(np.abs(lx - med))   # 1.4826 makes the MAD ~ SD for normal data
-    return float(np.expm1(med - nmads * mad)), float(np.expm1(med + nmads * mad))

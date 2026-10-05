@@ -4,6 +4,7 @@
 #   snakemake --cores 8 core            # core workflow only (Steps 1-10)
 #   snakemake --cores 8 annotate        # up to one step (rule name)
 #   snakemake -n                        # dry run: show what would run
+#   snakemake --cores 8 --forcerun qc   # re-run the analysis from QC on, without re-downloading anything
 #
 # Each rule runs one script in workflow/scripts/ inside the analysis environment named in
 # config/config.yaml (envs.python), via `conda run`. Outputs go to config `results`.
@@ -56,7 +57,7 @@ rule core:
         flag("spatial_stats"),
 
 
-# ---- Core workflow (notebook human_lung_cancer_workflow.ipynb, Steps 1-10) ------------------------
+# ---- Core workflow (notebooks/01_core_python.ipynb, Steps 1-10) ------------------------
 
 rule download:
     output:
@@ -216,7 +217,8 @@ rule proseg_robustness:
 
 rule atlas_download:
     output:
-        os.path.expanduser(f"{config['data_root']}/reference/luca_core_atlas.h5ad"),
+        # protected: a forced re-run (e.g. --forceall) must never delete the 12.9 GB download
+        protected(os.path.expanduser(f"{config['data_root']}/reference/luca_core_atlas.h5ad")),
     log:
         f"{LOG}/atlas_download.log",
     shell:

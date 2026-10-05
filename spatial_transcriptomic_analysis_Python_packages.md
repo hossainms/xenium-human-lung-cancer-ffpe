@@ -106,6 +106,26 @@ The **Used in** column refers to the steps of the main workflow notebook.
 | **tqdm** | 4.70.1 | 1 | Progress bars for the dataset download. |
 | **requests** | 2.34.2 | 1 | Resumable download of the dataset from 10x Genomics. |
 
+### 3.6 Spatial domains, differential expression, reference mapping (notebooks 03-04)
+
+| Package | Version | Used in | Why it is used |
+|---|---|---|---|
+| **pybanksy** | 1.3.5 | 04 | BANKSY spatial domains: each cell's expression augmented with its neighbours' average expression. |
+| **cellcharter** | 0.3.7 | 04 | CellCharter spatial domains: neighbour-aggregated embeddings clustered with Gaussian mixtures, number of domains chosen by stability. |
+| **torch**, **pytorch-lightning** | 2.14.1, 2.6.6 | 04 | Installed by CellCharter for its Gaussian-mixture trainer (run on the CPU here). |
+| **pydeseq2** | 0.5.4 | 04 | Pseudobulk differential expression (DESeq2 in Python) with a paired design. |
+| **celltypist** | 1.7.1 | not used | Installed for notebook 03, but its trainer fails on scikit-learn 1.9; the same model is fitted with scikit-learn directly. |
+
+### 3.7 This project's package and code quality
+
+| Package | Version | Why it is used |
+|---|---|---|
+| **ist-analysis** (this repository, `pip install --no-deps -e .`) | 1.0.0 | The analysis functions shared by the notebooks and the Snakemake pipeline. Installed in editable mode, so code changes apply immediately. |
+| **pytest** | 9.1.1 | Unit tests on synthetic data (`tests/`). |
+| **ruff** | 0.16.10 | Linting and import sorting (settings in `pyproject.toml`). |
+
+Snakemake itself runs from a separate small environment (`workflow/envs/snakemake_env.yml`): installing it into `spatial_env` would downgrade `packaging`.
+
 ## 4. External tool: Proseg (cell re-segmentation)
 
 | Tool | Version | Used in | Why it is used |

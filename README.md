@@ -1,5 +1,8 @@
 # Xenium human lung cancer (FFPE): spatial analysis of the tumour immune microenvironment
 
+[![CI](https://github.com/hossainms/xenium-human-lung-cancer-ffpe/actions/workflows/ci.yml/badge.svg)](https://github.com/hossainms/xenium-human-lung-cancer-ffpe/actions/workflows/ci.yml)
+![Python 3.12](https://img.shields.io/badge/python-3.12-blue) ![Snakemake 9](https://img.shields.io/badge/snakemake-9-green) ![Licence: MIT + CC BY 4.0](https://img.shields.io/badge/licence-MIT%20%2B%20CC%20BY%204.0-lightgrey)
+
 **Where do immune cells sit in a lung tumour, what are they doing there, and which findings survive a critical look at the data?** An end-to-end, single-cell-resolution analysis of the 10x Genomics **Xenium In Situ** public dataset *Human Lung Cancer FFPE* (377-gene panel, ~162,000 cells), built three ways: narrative **notebooks** (Python, with an independent **R / Bioconductor** replication), and a reproducible **Snakemake pipeline** that regenerates every result from the raw download.
 
 ## Key findings
@@ -19,12 +22,15 @@
 
 **4. The critical look.** Segmentation spillover is the dominant artefact in imaging spatial data: 19% of T cells carried tumour transcripts. Re-segmentation with Proseg reduces this to 1.5%, and every finding above was re-tested on the cleaner cells (CD8 exclusion, all six TLS and the CCR7 gradient hold). 42 of 60 'differentially expressed' macrophage genes were neighbouring-cell spillover and are filtered out. Cell types were validated against the Lung Cancer Atlas (892k cells; 92% lineage agreement, against an 87% ceiling for this panel).
 
-## The analysis, three ways
+## The analysis, three ways, one implementation
+
+All analysis logic lives in one Python package, **`ist_analysis`**: analysis functions for **imaging-based spatial transcriptomics (iST)**, the platform family of Xenium, MERSCOPE and CosMx. Everything specific to one platform's output files sits in an adapter, `ist_analysis/io/xenium.py` (loading the bundle, imaging tiles, negative-control probes, pixel size, the vendor's own clustering); every other module works on a standard AnnData (counts, cell centroids in µm, cell metadata), so another iST platform needs one new adapter, not new analysis code. The Python notebooks (narrative, figures, interpretation) and the Snakemake scripts (reproducible batch runs) both call the same functions, so every result has a single implementation, covered by unit tests.
 
 | Form | Where | Use it to |
 |---|---|---|
-| **Notebooks** (Python) | `human_lung_cancer_workflow.ipynb` (Steps 1-10), `notebooks/02-04` | read the analysis with figures and interpretation |
-| **Notebook** (R / Bioconductor) | `human_lung_cancer_workflow_by_R.ipynb` | an independent replication in R (Seurat, SpatialExperiment, imcRtools, Banksy, CellChat, spatstat), cross-checked against Python step by step |
+| **Package** | `ist_analysis/` (QC, clustering, annotation, spatial statistics, H&E, TIME, re-segmentation, reference mapping, domains; Xenium adapter in `io/`) | reuse the methods; read the implementation |
+| **Notebooks** (Python) | `notebooks/01_core_python.ipynb` (Steps 1-10), `notebooks/02-04` | read the analysis with figures and interpretation |
+| **Notebook** (R / Bioconductor) | `notebooks/01_core_R.ipynb` | an independent replication in R (Seurat, SpatialExperiment, imcRtools, Banksy, CellChat, spatstat), cross-checked against Python step by step |
 | **Snakemake pipeline** | `workflow/`, `config/` | re-run everything reproducibly from the raw download |
 
 ## What the analysis does
@@ -56,6 +62,7 @@ Each box is a Snakemake rule (one script); arrows are file dependencies. The cor
 ```bash
 conda env create -f workflow/envs/spatial_env.yml      # analysis environment (Python 3.12, scverse stack)
 conda env create -f workflow/envs/snakemake_env.yml    # orchestrator (Snakemake 9)
+conda run -n spatial_env pip install --no-deps -e .    # the ist_analysis package (used by notebooks and pipeline)
 ```
 
 Notebook 02 also needs [Proseg](https://github.com/dcjones/proseg) (`cargo install proseg`), unless an earlier run is reused (`proseg.reuse` in the config).
@@ -70,13 +77,18 @@ snakemake -n                     # dry run: list the jobs
 snakemake --cores 8 core         # core workflow, Steps 1-10
 snakemake --cores 8              # everything, including notebooks 02-04
 snakemake --cores 8 annotate     # stop after one step
+snakemake --cores 8 --forcerun qc   # re-run the analysis from QC on, keeping the downloads
 ```
+
+Avoid `--forceall`: it would also re-run the downloads (Snakemake deletes a rule's outputs before re-running it). The 12.9 GB atlas is marked `protected` for that reason.
 
 Each rule runs a script in `workflow/scripts/` inside `spatial_env` (via `conda run`). The scripts also run on their own, e.g. `python workflow/scripts/qc.py --marker <flag> --output qc.h5ad`.
 
 **Outputs** (under `results:` in the config): one `.h5ad` per step, `figures/`, `tables/`, `logs/`, and `xenium_explorer/` cell-group CSVs (cell types, lineages, niches, domains) that load into Xenium Explorer.
 
 **Report:** `python workflow/make_report.py report.html` (in `snakemake_env`) builds a self-contained HTML page with the workflow graph, runtimes, and the key figures and tables of every step, each with a caption (`workflow/report/`) and the code and parameters that produced it. It wraps `snakemake --report` and replaces local paths with `~`, so the page can be shared.
+
+**Tests:** `pytest` runs unit tests of the package on small synthetic datasets with known answers (QC rules, TLS detection, the contact test, the spillover filter, domain naming, reference-mapping helpers, annotation guards). GitHub Actions runs linting, the tests and a Snakemake dry run on every push.
 
 **Inspecting the workflow:** `snakemake -n` (what would run, and why), `snakemake --summary` (every output, the rule that made it, whether it is up to date).
 
@@ -85,10 +97,12 @@ Each rule runs a script in `workflow/scripts/` inside `spatial_env` (via `conda 
 ## Repository layout
 
 ```
-human_lung_cancer_workflow.ipynb        core analysis, Python (Steps 1-10)
-human_lung_cancer_workflow_by_R.ipynb   core analysis, R / Bioconductor
-notebooks/                               side analyses (02 re-segmentation, 03 reference mapping, 04 domains)
-xenium_utils.py                          shared paths, constants, helpers
+notebooks/01_core_python.ipynb           core analysis, Python (Steps 1-10)
+notebooks/01_core_R.ipynb                core analysis, R / Bioconductor (independent replication)
+notebooks/02-04                          side analyses (re-segmentation, reference mapping, spatial domains)
+ist_analysis/                            the iST analysis package (shared by notebooks and pipeline)
+ist_analysis/io/xenium.py                Xenium adapter: the only platform-specific code
+tests/                                   pytest unit tests on synthetic data
 workflow/Snakefile                       pipeline rules
 workflow/scripts/                        one script per step
 workflow/envs/                           conda environment files
@@ -96,9 +110,23 @@ workflow/report/                         report captions
 workflow/make_report.py                  shareable HTML report (local paths removed)
 workflow/rulegraph.png                   pipeline diagram
 config/                                  pipeline parameters and annotation decisions
+.github/workflows/ci.yml                 lint + tests + pipeline dry run
+pyproject.toml                           package metadata, lint and test settings
+LICENSE, LICENSE-CC-BY-4.0.md, CITATION.cff
 spatial_transcriptomic_analysis_*_packages.md   environment documentation (Python, R)
 ```
 
-## Data
+## Data and attribution
 
-10x Genomics public dataset, licensed CC BY 4.0. Raw data and results are never stored in the repository.
+Raw data and results are never stored in this repository; the pipeline downloads them.
+
+| Dataset | Source | Licence |
+|---|---|---|
+| Xenium Human Lung Cancer FFPE (Xenium v1, Human Multi-Tissue and Cancer panel) | 10x Genomics, public datasets | CC BY 4.0 |
+| Lung Cancer Atlas (LuCA), core atlas | Salcher et al., *Cancer Cell* 2022, via CELLxGENE | CC BY 4.0 |
+
+Methods used and cited: Proseg (Jones et al., *Nature Methods* 2025), BANKSY (Singhal et al., *Nature Genetics* 2024), CellCharter (Varrone et al., *Nature Genetics* 2024), CellTypist (Dominguez Conde et al., *Science* 2022), squidpy (Palla et al., *Nature Methods* 2022), scanpy, spatialdata, PyDESeq2, and in R: Seurat, SpatialExperiment, imcRtools, Banksy, SingleR, CellChat, spatstat. See `CITATION.cff`.
+
+## Licence
+
+Code: MIT (`LICENSE`). Text, figures and result tables: CC BY 4.0 (`LICENSE-CC-BY-4.0.md`). The datasets keep their own licences (above).

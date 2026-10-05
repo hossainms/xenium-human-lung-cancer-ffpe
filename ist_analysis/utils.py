@@ -1,6 +1,6 @@
-"""Shared paths, constants and helpers for the Xenium human lung cancer (FFPE) notebooks.
+"""This project's paths and constants (Xenium human lung cancer dataset), and small helpers.
 
-Every notebook imports this module instead of re-declaring paths and colours, so a change
+Notebooks and pipeline scripts import these instead of re-declaring paths and colours, so a change
 (e.g. a new data location) is made in one place.
 
 Data never lives in this repository: raw and processed files are under ~/data/xenium_lung/.
@@ -19,10 +19,13 @@ SAMPLE_DIR = DATA_ROOT / SAMPLE
 OUTS_DIR = SAMPLE_DIR / "outs"
 PROCESSED_DIR = DATA_ROOT / "processed"
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ANNOTATION_FILE = REPO_ROOT / "config" / "annotation.yaml"   # Step 6 label decisions (shared with the pipeline)
+
 HE_PATH = SAMPLE_DIR / f"{SAMPLE}_he_image.ome.tif"
 HE_ALIGNMENT_PATH = SAMPLE_DIR / f"{SAMPLE}_he_imagealignment.csv"
 
-# Outputs of the core workflow (human_lung_cancer_workflow.ipynb), by step
+# Outputs of the core workflow (notebooks/01_core_python.ipynb), by step
 STEP_FILES = {
     "qc": PROCESSED_DIR / f"{SAMPLE}_qc.h5ad",                  # Step 4: QC-filtered cells
     "clustered": PROCESSED_DIR / f"{SAMPLE}_clustered.h5ad",    # Step 5: clusters, UMAP
@@ -33,7 +36,7 @@ STEP_FILES = {
 }
 
 # ---- Constants -----------------------------------------------------------------------------
-PIXEL_SIZE_UM = 0.2125  # Xenium morphology image: um per pixel
+from .io.xenium import PIXEL_SIZE_UM  # noqa: E402, F401  (re-exported: this project's platform is Xenium, um per pixel)
 
 TUMOUR_TYPES = [
     "Tumour epithelial (MALL/TCIM)",
@@ -87,3 +90,17 @@ def output_dir(analysis: str) -> Path:
     path = PROCESSED_DIR / analysis
     path.mkdir(parents=True, exist_ok=True)
     return path
+
+
+def mad_bounds(x, nmads: float) -> tuple[float, float]:
+    """Median +/- nmads * MAD on the log1p scale, returned on the original scale.
+
+    Used for cell-area outliers: area is roughly log-normal, so bounds are symmetric on the log scale.
+    1.4826 scales the MAD to the standard deviation of a normal distribution.
+    """
+    import numpy as np
+
+    lx = np.log1p(np.asarray(x, dtype=float))
+    med = np.median(lx)
+    mad = 1.4826 * np.median(np.abs(lx - med))
+    return float(np.expm1(med - nmads * mad)), float(np.expm1(med + nmads * mad))

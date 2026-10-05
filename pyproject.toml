@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ist-analysis"
+version = "1.0.0"
+description = "Analysis functions for imaging-based spatial transcriptomics (iST), applied to a 10x Xenium human lung cancer dataset"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "MD Shakhaowat Hossain" }]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy", "pandas", "scipy", "scikit-learn", "statsmodels", "matplotlib", "pyyaml",
+    "anndata", "scanpy", "squidpy", "spatialdata", "spatialdata-io", "tifffile", "zarr", "scikit-image", "pyarrow", "h5py",
+]
+
+[project.optional-dependencies]
+domains = ["pybanksy", "cellcharter", "pydeseq2"]
+dev = ["pytest", "ruff"]
+
+[tool.setuptools]
+packages = ["ist_analysis"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 160
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E741", "E731", "E702"]   # short names; lambdas; one-line matplotlib calls
+
+[tool.ruff.lint.isort]
+known-first-party = ["ist_analysis", "common"]

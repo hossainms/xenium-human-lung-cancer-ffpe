@@ -1,0 +1,1 @@
+Notebook 05. Pearson r between ridge-regression predictions from the 112 um H&E embedding and observed expression, per gene, for the cell's own expression and for the regional mean within 50 um (block-split cross-validation), with Step 10's Moran's I. Predictable genes are the spatially clustered ones.

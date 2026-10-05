@@ -26,6 +26,8 @@
 
 **4. The critical look.** Segmentation spillover is the dominant artefact in imaging spatial data: 19% of T cells carried tumour transcripts. Re-segmentation with Proseg reduces this to 1.5%, and every finding above was re-tested on the cleaner cells (CD8 exclusion, all six TLS and the CCR7 gradient hold). 42 of 60 'differentially expressed' macrophage genes were neighbouring-cell spillover and are filtered out. Cell types were validated against the Lung Cancer Atlas (892k cells; 92% lineage agreement, against an 87% ceiling for this panel).
 
+**5. What the H&E can and cannot see.** A pathology foundation model (Phikon-v2) read at each cell's position on the matched H&E predicts lineage at 57% and cell type at 34% balanced accuracy on held-out tissue blocks (about 4x and 9x chance), above a control that knows each cell's Xenium neighbours. Epithelium (90%), smooth muscle and alveolar macrophages (71%) are visible; functional states (Tregs, CXCL9+ macrophages) are not. The H&E predicts *regional* gene expression well (median r 0.52) but a cell's own expression poorly (0.17), and checkpoint genes (PD-1, PD-L1, LAG-3) not at all.
+
 ## The analysis, three ways, one implementation
 
 All analysis logic lives in one Python package, **`ist_analysis`**: analysis functions for **imaging-based spatial transcriptomics (iST)**, the platform family of Xenium, MERSCOPE and CosMx. Everything specific to one platform's output files sits in an adapter, `ist_analysis/io/xenium.py` (loading the bundle, imaging tiles, negative-control probes, pixel size, the vendor's own clustering); every other module works on a standard AnnData (counts, cell centroids in µm, cell metadata), so another iST platform needs one new adapter, not new analysis code. The Python notebooks (narrative, figures, interpretation) and the Snakemake scripts (reproducible batch runs) both call the same functions, so every result has a single implementation, covered by unit tests.
@@ -33,7 +35,7 @@ All analysis logic lives in one Python package, **`ist_analysis`**: analysis fun
 | Form | Where | Use it to |
 |---|---|---|
 | **Package** | `ist_analysis/` (QC, clustering, annotation, spatial statistics, H&E, TIME, re-segmentation, reference mapping, domains; Xenium adapter in `io/`) | reuse the methods; read the implementation |
-| **Notebooks** (Python) | `notebooks/01_core_python.ipynb` (Steps 1-10), `notebooks/02-04` | read the analysis with figures and interpretation |
+| **Notebooks** (Python) | `notebooks/01_core_python.ipynb` (Steps 1-10), `notebooks/02-05` | read the analysis with figures and interpretation |
 | **Notebook** (R / Bioconductor) | `notebooks/01_core_R.ipynb` | an independent replication in R (Seurat, SpatialExperiment, imcRtools, Banksy, CellChat, spatstat), cross-checked against Python step by step |
 | **Snakemake pipeline** | `workflow/`, `config/` | re-run everything reproducibly from the raw download |
 
@@ -52,6 +54,7 @@ All analysis logic lives in one Python package, **`ist_analysis`**: analysis fun
 | 02 | Cell re-segmentation and robustness of the findings | Proseg |
 | 03 | Validation of cell types against the Lung Cancer Atlas (LuCA) | logistic regression (CellTypist model) |
 | 04 | Spatial domains and location-dependent macrophage states | BANKSY, CellCharter, PyDESeq2 |
+| 05 | What a pathology foundation model sees in the H&E: cell types, genes and domains from morphology | Phikon-v2 (PyTorch, transformers) |
 
 ## The pipeline
 
@@ -79,7 +82,7 @@ Notebook 02 also needs [Proseg](https://github.com/dcjones/proseg) (`cargo insta
 conda activate snakemake_env
 snakemake -n                     # dry run: list the jobs
 snakemake --cores 8 core         # core workflow, Steps 1-10
-snakemake --cores 8              # everything, including notebooks 02-04
+snakemake --cores 8              # everything, including notebooks 02-05
 snakemake --cores 8 annotate     # stop after one step
 snakemake --cores 8 --forcerun qc   # re-run the analysis from QC on, keeping the downloads
 ```
@@ -105,7 +108,7 @@ Each rule runs a script in `workflow/scripts/` inside `spatial_env` (via `conda 
 ```
 notebooks/01_core_python.ipynb           core analysis, Python (Steps 1-10)
 notebooks/01_core_R.ipynb                core analysis, R / Bioconductor (independent replication)
-notebooks/02-04                          side analyses (re-segmentation, reference mapping, spatial domains)
+notebooks/02-05                          side analyses (re-segmentation, reference mapping, spatial domains, H&E foundation model)
 ist_analysis/                            the iST analysis package (shared by notebooks and pipeline)
 ist_analysis/io/xenium.py                Xenium adapter: the only platform-specific code
 tests/                                   pytest unit tests on synthetic data

@@ -50,6 +50,7 @@ rule all:
         flag("proseg_robustness"),
         flag("reference_mapping"),
         flag("spatial_domains"),
+        flag("he_foundation_model"),
 
 
 rule core:
@@ -257,3 +258,21 @@ rule spatial_domains:
     threads: 8
     shell:
         "{PY}/spatial_domains.py --input {input.time} --proseg {input.proseg} --marker {output[0]} > {log} 2>&1"
+
+
+rule he_foundation_model:
+    input:
+        time=h5ad("time"),
+        domains=flag("spatial_domains"),          # writes tables/nb04_domains.csv.gz
+        stats=flag("spatial_stats"),              # writes tables/step10_moran_i.csv
+    output:
+        flag("he_foundation_model"),
+        tab("nb05_classification_scores", "10. H&E foundation model"),
+        tab("nb05_gene_predictability", "10. H&E foundation model"),
+    log:
+        f"{LOG}/he_foundation_model.log",
+    resources:
+        mem_mb=16000,                             # aligned H&E at 0.25 um/px is ~1.8 GB; peak ~8 GB
+    shell:
+        "{PY}/he_foundation_model.py --input {input.time} --domains {TABLES}/nb04_domains.csv.gz"
+        " --moran {TABLES}/step10_moran_i.csv --marker {output[0]} > {log} 2>&1"

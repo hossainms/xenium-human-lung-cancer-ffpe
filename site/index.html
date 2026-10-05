@@ -87,6 +87,20 @@
   </article>
 </section>
 
+<section id="he">
+  <article class="finding plain">
+    <div class="text">
+      <span class="num">5</span>
+      <h3>What the H&amp;E can and cannot see</h3>
+      <p>A pathology foundation model (Phikon-v2) read at each cell's position on the matched H&amp;E predicts lineage at 57%
+        and cell type at 34% balanced accuracy on held-out tissue blocks (about 4x and 9x chance), above a control that knows
+        each cell's Xenium neighbours. Epithelium (90%), smooth muscle and alveolar macrophages (71%) are visible; functional
+        states such as Tregs and CXCL9+ macrophages are not. The H&amp;E predicts regional gene expression well (median r 0.52)
+        but a cell's own expression poorly (0.17), and checkpoint genes (PD-1, PD-L1, LAG-3) not at all.</p>
+    </div>
+  </article>
+</section>
+
 <section id="explore">
   <h2>Explore</h2>
   <div class="cards">
@@ -124,6 +138,8 @@
         <td>Cell types validated against the Lung Cancer Atlas, with a held-out-donor accuracy ceiling</td></tr>
       <tr><td><a href="notebooks/04_spatial_domains.html">04 &middot; Spatial domains</a></td>
         <td>BANKSY and CellCharter domains, and location-dependent macrophage states by pseudobulk DESeq2</td></tr>
+      <tr><td><a href="notebooks/05_he_foundation_model.html">05 &middot; H&amp;E foundation model</a></td>
+        <td>What a pathology foundation model (Phikon-v2) sees in the H&amp;E: cell types, genes and tissue domains from morphology alone</td></tr>
     </tbody>
   </table>
 </section>

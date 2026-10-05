@@ -69,3 +69,10 @@ domains:                    # notebook 04
   cellcharter_k_range: [4, 12]
   cellcharter_runs: 3
   block_um: 1000
+
+he_model:                   # notebook 05
+  model: phikon-v2          # ungated histology foundation model (or phikon); weights download from Hugging Face
+  n_per_type: 1500          # cells per cell type (all cells of rarer types); ~20 min of GPU embedding
+  tile_um: 112              # whole-slide tiles = the 112 um field of view
+  block_um: 1000            # cross-validation blocks
+  n_domains: 7              # k-means on tile embeddings (CellCharter's most stable K)

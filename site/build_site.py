@@ -25,7 +25,8 @@ import pandas as pd
 from ist_analysis import utils as xu
 
 SITE_URL = "https://hossainms.github.io/xenium-human-lung-cancer-ffpe"
-NOTEBOOKS = ["01_core_python", "01_core_R", "02_resegmentation_proseg", "03_reference_mapping", "04_spatial_domains"]
+NOTEBOOKS = ["01_core_python", "01_core_R", "02_resegmentation_proseg", "03_reference_mapping", "04_spatial_domains",
+             "05_he_foundation_model"]
 
 # obs columns shown as cell sets in the viewer: (column, name in the viewer)
 CELL_SETS = [("lineage", "Lineage"), ("cell_type", "Cell type"), ("niche", "Niche (Step 7)"),

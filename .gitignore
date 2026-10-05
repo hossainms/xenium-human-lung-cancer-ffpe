@@ -24,3 +24,6 @@ data/
 # Python
 __pycache__/
 .ipynb_checkpoints/
+
+# Snakemake working state
+.snakemake/

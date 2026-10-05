@@ -1,0 +1,257 @@
+# Snakemake pipeline: Xenium human lung cancer (FFPE), end to end.
+#
+#   snakemake --cores 8                 # everything
+#   snakemake --cores 8 core            # core workflow only (Steps 1-10)
+#   snakemake --cores 8 annotate        # up to one step (rule name)
+#   snakemake -n                        # dry run: show what would run
+#
+# Each rule runs one script in workflow/scripts/ inside the analysis environment named in
+# config/config.yaml (envs.python), via `conda run`. Outputs go to config `results`.
+
+import os
+
+configfile: "config/config.yaml"
+
+
+report: "report/workflow.rst"
+
+
+RES = os.path.expanduser(config["results"])
+SAMPLE = config["sample"]
+PY = f"conda run --no-capture-output -n {config['envs']['python']} python workflow/scripts"
+LOG = f"{RES}/logs"
+
+
+def h5ad(name):
+    return f"{RES}/{SAMPLE}_{name}.h5ad"
+
+
+def flag(name):
+    return f"{RES}/flags/{name}.done"
+
+
+TABLES = f"{RES}/tables"
+FIGS = f"{RES}/figures"
+
+
+# Outputs marked with report() appear in `snakemake --report report.html`, with the caption in workflow/report/
+def fig(name, category):
+    return report(f"{FIGS}/{name}.png", category=category, caption=f"report/{name}.rst")
+
+
+def tab(name, category, caption=None):
+    return report(f"{TABLES}/{name}.csv", category=category, caption=f"report/{caption or name}.rst")
+
+
+rule all:
+    input:
+        flag("spatial_stats"),
+        flag("proseg_robustness"),
+        flag("reference_mapping"),
+        flag("spatial_domains"),
+
+
+rule core:
+    input:
+        flag("spatial_stats"),
+
+
+# ---- Core workflow (notebook humnan_lung_cancer_workflow.ipynb, Steps 1-10) ------------------------
+
+rule download:
+    output:
+        marker=flag("download"),
+    log:
+        f"{LOG}/download.log",
+    shell:
+        "{PY}/download.py --marker {output.marker} > {log} 2>&1"
+
+
+rule qc:
+    input:
+        flag("download"),
+    output:
+        h5ad("qc"),
+        fig("step04_qc_distributions", "1. Quality control"),
+        tab("step04_qc_rules", "1. Quality control"),
+    log:
+        f"{LOG}/qc.log",
+    shell:
+        "{PY}/qc.py --marker {input} --output {output[0]} > {log} 2>&1"
+
+
+rule cluster:
+    input:
+        h5ad("qc"),
+    output:
+        h5ad("clustered"),
+        fig("step05_clusters", "2. Clustering and annotation"),
+        tab("step05_clusters", "2. Clustering and annotation", "step05_clusters_table"),
+    log:
+        f"{LOG}/cluster.log",
+    threads: 8
+    shell:
+        "{PY}/cluster.py --input {input} --output {output[0]} > {log} 2>&1"
+
+
+rule annotate:
+    input:
+        data=h5ad("clustered"),
+        labels="config/annotation.yaml",
+    output:
+        h5ad("annotated"),
+        fig("step06_lineages", "2. Clustering and annotation"),
+        tab("step06_cell_types", "2. Clustering and annotation"),
+    log:
+        f"{LOG}/annotate.log",
+    shell:
+        "{PY}/annotate.py --input {input.data} --output {output[0]} > {log} 2>&1"
+
+
+rule spatial:
+    input:
+        h5ad("annotated"),
+    output:
+        h5ad("spatial"),
+        fig("step07_nhood_enrichment_lineage", "3. Spatial organisation"),
+        fig("step07_nhood_enrichment_time_type", "3. Spatial organisation"),
+        fig("step07_tls", "3. Spatial organisation"),
+        tab("step07_infiltration", "3. Spatial organisation"),
+    log:
+        f"{LOG}/spatial.log",
+    threads: 4
+    shell:
+        "{PY}/spatial.py --input {input} --output {output[0]} > {log} 2>&1"
+
+
+rule he_features:
+    input:
+        h5ad("spatial"),
+    output:
+        h5ad("he_features"),
+        fig("step08_alignment", "4. H&E"),
+        fig("step08_histology_windows", "4. H&E"),
+    log:
+        f"{LOG}/he_features.log",
+    resources:
+        mem_mb=8000,
+    shell:
+        "{PY}/he.py --input {input} --output {output[0]} > {log} 2>&1"
+
+
+rule time_analysis:
+    input:
+        h5ad("spatial"),
+    output:
+        data=h5ad("time"),
+        contacts=tab("step09_ligand_receptor_contacts", "5. Tumour immune microenvironment"),
+        phenotypes=fig("step09_immune_phenotypes", "5. Tumour immune microenvironment"),
+        checkpoints=tab("step09_checkpoint_positivity", "5. Tumour immune microenvironment"),
+    log:
+        f"{LOG}/time_analysis.log",
+    shell:
+        "{PY}/time_analysis.py --input {input} --output {output.data} > {log} 2>&1"
+
+
+rule spatial_stats:
+    input:
+        data=h5ad("time"),
+        contacts=f"{TABLES}/step09_ligand_receptor_contacts.csv",
+        he=h5ad("he_features"),      # not read here; makes `core` include Step 8
+    output:
+        flag("spatial_stats"),
+        fig("step10_co_occurrence", "6. Spatial statistics"),
+        tab("step10_ligrec_vs_contact_test", "6. Spatial statistics"),
+    log:
+        f"{LOG}/spatial_stats.log",
+    threads: 4
+    shell:
+        "{PY}/spatial_stats.py --input {input.data} --contacts {input.contacts} --marker {output[0]} > {log} 2>&1"
+
+
+# ---- Side analyses (notebooks/02-04) ---------------------------------------------------------------
+
+rule proseg_run:
+    input:
+        flag("download"),
+    output:
+        directory(f"{RES}/resegmentation/proseg-output.zarr"),
+    log:
+        f"{LOG}/proseg_run.log",
+    threads: config["proseg"]["threads"]
+    resources:
+        mem_mb=14000,
+    shell:
+        "{PY}/proseg_run.py --marker {input} --output {output} > {log} 2>&1"
+
+
+rule proseg_export:
+    input:
+        zarr=f"{RES}/resegmentation/proseg-output.zarr",
+        annotated=h5ad("annotated"),
+    output:
+        h5ad("proseg_counts"),
+        tab("nb02_paired_spillover", "7. Re-segmentation (Proseg)"),
+    log:
+        f"{LOG}/proseg_export.log",
+    shell:
+        "{PY}/proseg_export.py --zarr {input.zarr} --annotated {input.annotated} --output {output[0]} > {log} 2>&1"
+
+
+rule proseg_robustness:
+    input:
+        proseg=h5ad("proseg_counts"),
+        annotated=h5ad("annotated"),
+        clustered=h5ad("clustered"),
+        time=h5ad("time"),
+    output:
+        flag("proseg_robustness"),
+        tab("nb02_verdict", "7. Re-segmentation (Proseg)"),
+    log:
+        f"{LOG}/proseg_robustness.log",
+    shell:
+        "{PY}/proseg_robustness.py --proseg {input.proseg} --annotated {input.annotated} --clustered {input.clustered}"
+        " --time {input.time} --marker {output[0]} > {log} 2>&1"
+
+
+rule atlas_download:
+    output:
+        os.path.expanduser(f"{config['data_root']}/reference/luca_core_atlas.h5ad"),
+    log:
+        f"{LOG}/atlas_download.log",
+    shell:
+        "{PY}/atlas_download.py --output {output} > {log} 2>&1"
+
+
+rule reference_mapping:
+    input:
+        atlas=rules.atlas_download.output,
+        annotated=h5ad("annotated"),
+        proseg=h5ad("proseg_counts"),
+    output:
+        flag("reference_mapping"),
+        tab("nb03_agreement_by_cell_type", "8. Reference atlas"),
+    log:
+        f"{LOG}/reference_mapping.log",
+    resources:
+        mem_mb=12000,
+    shell:
+        "{PY}/reference_mapping.py --atlas {input.atlas} --annotated {input.annotated} --proseg {input.proseg}"
+        " --marker {output[0]} > {log} 2>&1"
+
+
+rule spatial_domains:
+    input:
+        time=h5ad("time"),
+        proseg=h5ad("proseg_counts"),
+    output:
+        flag("spatial_domains"),
+        fig("nb04_domain_maps", "9. Spatial domains"),
+        tab("nb04_method_agreement", "9. Spatial domains"),
+        tab("nb04_pseudobulk_fcgr1a_tumour-myeloid_vs_stroma", "9. Spatial domains"),
+        tab("nb04_pseudobulk_cd163_lymphoid_vs_stroma", "9. Spatial domains"),
+    log:
+        f"{LOG}/spatial_domains.log",
+    threads: 8
+    shell:
+        "{PY}/spatial_domains.py --input {input.time} --proseg {input.proseg} --marker {output[0]} > {log} 2>&1"

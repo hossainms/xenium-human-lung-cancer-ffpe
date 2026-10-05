@@ -1,0 +1,88 @@
+# Step 6 cell-type annotation: the analysis decisions, kept out of the code.
+# Each label is tied to a Leiden cluster number of the working clustering (config: cluster.working).
+# A guard marker must be among the cluster's top-10 marker genes, so a changed clustering fails loudly
+# instead of silently mislabelling cells.
+
+marker_sets:                 # literature marker sets, scored per cell (genes absent from the panel are skipped)
+  T cell: [CD3D, CD3E, CD2, TRAC, CD247, IL7R, CD5, CD6]
+  CD8 T: [CD8A, CD8B, GZMK, GZMA, CCL5, NKG7]
+  Treg: [FOXP3, IL2RA, CTLA4, TNFRSF18, IKZF2]
+  NK: [KLRD1, KLRC1, GNLY, PRF1, NCAM1]
+  B cell: [MS4A1, CD19, CD79A, BANK1, PAX5]
+  Plasma cell: [MZB1, TNFRSF17, DERL3, PRDM1, JCHAIN, XBP1]
+  Macrophage: [CD68, CD163, MRC1, MS4A4A, C1QA, APOE]
+  Alveolar mac: [MARCO, MCEMP1, PPARG, FABP4]
+  Monocyte: [CD14, FCN1, S100A12, VCAN, S100A8]
+  Dendritic cell: [CD1C, FCER1A, CLEC10A, LAMP3, CCR7, CLEC9A]
+  Mast cell: [CPA3, KIT, MS4A2, TPSAB1]
+  Fibroblast: [PDGFRA, FBN1, SFRP2, MFAP5, DCN, LUM, COL1A1]
+  Smooth muscle: [MYH11, ACTA2, CNN1, DES, MYLK]
+  Endothelial: [PECAM1, VWF, CD34, CD93, CLEC14A, CLDN5]
+  Lymphatic endo: [PROX1, LYVE1, MMRN1, CCL21]
+  Epithelial: [EPCAM, KRT7, KRT8, KRT18, CEACAM6]
+  Alveolar type 2: [SFTPC, SFTPB, NAPSA, LAMP3, SFTA2]
+  Basal / club: [KRT5, TP63, SCGB1A1, SCGB3A1]
+  Ciliated: [FOXJ1, SNTN, C20orf85, CCDC39, CAPS]
+  Proliferating: [MKI67, TOP2A, CENPF, CDK1, PCNA]
+
+coarse:                      # working cluster -> [cell type, lineage]
+  "0": [T / NK, T / NK]                                  # refined below
+  "1": [Myeloid, Myeloid]                                # refined below
+  "10": [Myeloid, Myeloid]                               # refined below
+  "2": [Tumour epithelial (MALL/TCIM), Epithelial]
+  "3": [Tumour epithelial (CYP2B6/CFTR), Epithelial]
+  "5": [Tumour epithelial (MYC/CAPN8), Epithelial]
+  "4": [Proliferating tumour, Epithelial]
+  "13": [Ciliated epithelial, Epithelial]
+  "6": [B cell, B / plasma]
+  "12": [Plasma cell, B / plasma]
+  "11": [Mast cell, Mast]
+  "7": [Fibroblast, Stromal]
+  "9": [Smooth muscle, Stromal]
+  "8": [Endothelial, Endothelial]
+
+subcluster_resolution: 0.6
+subclusters:                 # re-clustered lineages: subcluster -> [label, confidence, guard marker]
+  T_NK:
+    clusters: ["0"]
+    labels:
+      "1": [CD8 T (GZMK+), high, GZMK]
+      "5": [CD4 T, mixed, IL7R]                          # also carries endothelial transcripts
+      "4": [Treg, high, FOXP3]
+      "7": [NK, high, GNLY]
+      "9": [Proliferating T, high, MKI67]
+      "10": [mregDC (LAMP3+), high, LAMP3]
+      "3": [Mast cell, high, CPA3]
+      "8": [Lymphatic endothelial, high, PROX1]
+      "0": [T / myeloid mixed, mixed, MS4A6A]
+      "2": [T / epithelial mixed, mixed, EPCAM]
+      "6": [T / fibroblast mixed, mixed, FBN1]
+  Myeloid:
+    clusters: ["1", "10"]
+    labels:
+      "7": [CD163+ macrophage, high, CD163]
+      "3": [FCGR1A+ macrophage, high, FCGR1A]
+      "2": [Alveolar macrophage, high, MARCO]
+      "9": [CXCL9+ macrophage, high, CXCL9]
+      "11": [LYVE1+ macrophage, high, LYVE1]
+      "1": [Monocyte, high, MNDA]
+      "0": [cDC2, high, CD1C]
+      "10": [cDC1 (IRF8+), high, IRF8]
+      "5": [Proliferating myeloid, high, MKI67]
+      "4": [Myeloid / epithelial mixed, mixed, EPCAM]
+      "6": [Myeloid / T mixed, mixed, TRAC]
+      "8": [Myeloid / fibroblast mixed, mixed, FBN1]
+
+lineage_overrides:           # final label -> lineage, where it differs from the coarse cluster's lineage
+  CD8 T (GZMK+): T / NK
+  CD4 T: T / NK
+  Treg: T / NK
+  NK: T / NK
+  Proliferating T: T / NK
+  T / myeloid mixed: T / NK
+  T / epithelial mixed: T / NK
+  T / fibroblast mixed: T / NK
+  mregDC (LAMP3+): Myeloid
+  Mast cell: Mast
+  Lymphatic endothelial: Endothelial
+all_myeloid_subclusters_are: Myeloid

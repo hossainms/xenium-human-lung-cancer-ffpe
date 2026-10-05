@@ -1,0 +1,1 @@
+End-to-end analysis of the 10x Genomics Xenium Human Lung Cancer FFPE dataset (377-gene panel), with a focus on the tumour immune microenvironment: QC, clustering, annotation, spatial statistics, H&E alignment, re-segmentation (Proseg), validation against the Lung Cancer Atlas and spatial domains. Parameters: config/config.yaml; annotation decisions: config/annotation.yaml.

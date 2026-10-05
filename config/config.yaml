@@ -1,0 +1,71 @@
+# Pipeline configuration: Xenium human lung cancer (FFPE)
+# Paths starting with ~ are expanded on each machine. Raw data and results live outside the repository.
+
+data_root: ~/data/xenium_lung                 # raw 10x bundle is downloaded here
+sample: Xenium_V1_humanLung_Cancer_FFPE
+results: ~/data/xenium_lung/pipeline          # every pipeline output (separate from the notebook outputs)
+
+# Conda environments the rules run in (by name; see workflow/envs/ to recreate them)
+envs:
+  python: spatial_env
+
+download:
+  base_url: https://cf.10xgenomics.com/samples/xenium/2.0.0/Xenium_V1_humanLung_Cancer_FFPE
+  he_image: true            # ~1.2 GB H&E image, needed for Step 8
+  delete_zip: false         # true frees ~8 GB once the bundle is extracted
+
+qc:                         # Step 4
+  min_counts: 10            # fixed floor: fewer transcripts cannot be typed on a 377-gene panel
+  min_genes: 5
+  area_nmads: 3             # cell-area outliers on the log scale (fragments / merged cells)
+  max_control_frac: 0.05    # negative-control counts as a fraction of gene counts
+
+cluster:                    # Step 5
+  n_pcs: 30
+  n_neighbors: 15
+  resolutions: [0.3, 0.5, 1.0]
+  working: leiden_0.5       # the clustering Step 6 annotates (labels in config/annotation.yaml)
+  seed: 0
+
+annotation_file: config/annotation.yaml   # Step 6 label tables (analysis decisions, kept out of code)
+
+spatial:                    # Step 7
+  max_edge_um: 30           # Delaunay edges longer than this are removed
+  niche_radius_um: 50
+  n_niches: 10
+  contact_um: 15            # "in contact with tumour"
+  tls_eps_um: 25            # DBSCAN on B cells
+  tls_min_cells: 20
+  n_perms: 1000
+
+he:                         # Step 8
+  feature_level: 2          # H&E pyramid level for per-cell features (~1.1 um / px)
+  qc_res_um: 4
+
+time:                       # Step 9
+  tile_um: 400
+  desert_cd8_per_mm2: 50
+  inflamed_ratio: 0.5
+  n_perms: 1000
+
+stats:                      # Step 10
+  subsample: 40000
+  seed: 0
+
+proseg:                     # notebook 02
+  binary: ~/.cargo/bin/proseg
+  threads: 8                # all cores of this laptop; the run takes ~30 min and ~13 GB RAM
+  # Link an earlier run instead of repeating it (null = run Proseg)
+  reuse: ~/data/xenium_lung/processed/resegmentation/proseg/proseg-output.zarr
+
+reference:                  # notebook 03
+  atlas_url: https://datasets.cellxgene.cziscience.com/46e0287b-9a33-4e83-99f3-8c044131bfdc.h5ad
+  max_cells_per_type: 5000
+  test_donor_fraction: 0.2
+
+domains:                    # notebook 04
+  banksy_lambda: 0.8
+  banksy_resolution: 0.2
+  cellcharter_k_range: [4, 12]
+  cellcharter_runs: 3
+  block_um: 1000

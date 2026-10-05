@@ -1,5 +1,7 @@
 # Xenium human lung cancer (FFPE): spatial analysis of the tumour immune microenvironment
 
+**MD Shakhaowat Hossain** · Graduate Researcher, Tulane University School of Medicine
+
 [![CI](https://github.com/hossainms/xenium-human-lung-cancer-ffpe/actions/workflows/ci.yml/badge.svg)](https://github.com/hossainms/xenium-human-lung-cancer-ffpe/actions/workflows/ci.yml)
 ![Python 3.12](https://img.shields.io/badge/python-3.12-blue) ![Snakemake 9](https://img.shields.io/badge/snakemake-9-green) ![Licence: MIT + CC BY 4.0](https://img.shields.io/badge/licence-MIT%20%2B%20CC%20BY%204.0-lightgrey)
 
@@ -132,6 +134,16 @@ Raw data and results are never stored in this repository; the pipeline downloads
 
 Methods used and cited: Proseg (Jones et al., *Nature Methods* 2025), BANKSY (Singhal et al., *Nature Genetics* 2024), CellCharter (Varrone et al., *Nature Genetics* 2024), CellTypist (Dominguez Conde et al., *Science* 2022), squidpy (Palla et al., *Nature Methods* 2022), scanpy, spatialdata, PyDESeq2, and in R: Seurat, SpatialExperiment, imcRtools, Banksy, SingleR, CellChat, spatstat. See `CITATION.cff`.
 
+## Author and citation
+
+Design, analysis, code and interpretation: **MD Shakhaowat Hossain**, Graduate Researcher, Tulane University School of Medicine.
+
+If you use this analysis or its code, please cite it (GitHub's "Cite this repository" button reads `CITATION.cff`):
+
+> Hossain, MD Shakhaowat (2026). *Xenium human lung cancer (FFPE): spatial analysis of the tumour immune microenvironment*. Version 1.0.0. https://github.com/hossainms/xenium-human-lung-cancer-ffpe
+
+and cite the datasets and methods listed above.
+
 ## Licence
 
-Code: MIT (`LICENSE`). Text, figures and result tables: CC BY 4.0 (`LICENSE-CC-BY-4.0.md`). The datasets keep their own licences (above).
+© 2026 MD Shakhaowat Hossain. Code: MIT (`LICENSE`). Text, figures and result tables: CC BY 4.0 (`LICENSE-CC-BY-4.0.md`). The datasets keep their own licences (above).

@@ -131,7 +131,9 @@ for name, r in tls.iterrows():
     ax.add_patch(Circle((r["x (mm)"], r["y (mm)"]), r["radius (um)"] / 1000 + 0.05, fill=False, lw=1.2))
     ax.annotate(name, (r["x (mm)"] - r["radius (um)"] / 1000 - 0.08, r["y (mm)"]), ha="right", fontsize=8.5, weight="bold")
 ax.set_aspect("equal"); ax.invert_yaxis()
-ax.set_title("TLS-like aggregates on the lineage map", loc="left")
+ax.set_xlabel("x (mm)"); ax.set_ylabel("y (mm)")
+ax.legend(markerscale=30, frameon=False, ncol=7, loc="upper left", bbox_to_anchor=(0, -0.12), fontsize=9)
+ax.set_title("TLS-like aggregates (circled) on the lineage map", loc="left")
 step.save_fig(fig, "step07_tls")
 
 adata.uns["step7_params"] = {k: v for k, v in cfg.items()}

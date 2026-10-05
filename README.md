@@ -1,13 +1,30 @@
 # Xenium human lung cancer (FFPE): spatial analysis of the tumour immune microenvironment
 
-End-to-end analysis of the 10x Genomics **Xenium In Situ** public dataset *Human Lung Cancer FFPE* (Xenium v1, Human Multi-Tissue and Cancer panel, 377 genes, ~162,000 cells), at single-cell resolution, with a focus on the **tumour immune microenvironment (TIME)**.
+**Where do immune cells sit in a lung tumour, what are they doing there, and which findings survive a critical look at the data?** An end-to-end, single-cell-resolution analysis of the 10x Genomics **Xenium In Situ** public dataset *Human Lung Cancer FFPE* (377-gene panel, ~162,000 cells), built three ways: narrative **notebooks** (Python, with an independent **R / Bioconductor** replication), and a reproducible **Snakemake pipeline** that regenerates every result from the raw download.
 
-The analysis exists in three forms:
+## Key findings
+
+**1. CD8 T cells are excluded from the tumour.** Only 12% of CD8 T cells sit within 15 µm of a tumour cell, against 34% for non-tumour cells in general; the tumour border is lined by macrophages, dendritic cells and fibroblasts instead. Per 400 µm tumour tile: 65% *excluded*, 26% *desert*, 9% *inflamed* (identical in Python and R).
+
+![Immune phenotype per tumour tile](images/immune_phenotypes.png)
+
+**2. Six tertiary lymphoid structure (TLS)-like aggregates.** B-cell cores with a T-cell rim, confirmed on the matched H&E. CD8 T cells lose the lymphoid-homing receptor CCR7 on the way from TLS to tumour (36% -> 11%), and CCL19 -> CCR7 cell contacts are enriched 2.4-fold in a spatial permutation test.
+
+![TLS-like aggregates](images/tls_lineage_map.jpg)
+![TLS1 on the H&E](images/he_tls_window.jpg)
+
+**3. The same macrophage type changes state with location.** FCGR1A+ macrophages switch from a TREM2 / CTSK / LPL programme in stroma to MARCO / MCEMP1 / CXCL2 next to tumour (paired pseudobulk DESeq2 on spatial domains from BANKSY and CellCharter).
+
+![Spatial domains](images/spatial_domains.jpg)
+
+**4. The critical look.** Segmentation spillover is the dominant artefact in imaging spatial data: 19% of T cells carried tumour transcripts. Re-segmentation with Proseg reduces this to 1.5%, and every finding above was re-tested on the cleaner cells (CD8 exclusion, all six TLS and the CCR7 gradient hold). 42 of 60 'differentially expressed' macrophage genes were neighbouring-cell spillover and are filtered out. Cell types were validated against the Lung Cancer Atlas (892k cells; 92% lineage agreement, against an 87% ceiling for this panel).
+
+## The analysis, three ways
 
 | Form | Where | Use it to |
 |---|---|---|
-| **Notebooks** (Python) | `humnan_lung_cancer_workflow.ipynb` (Steps 1-10), `notebooks/02-04` | read the analysis with figures and interpretation |
-| **Notebook** (R / Bioconductor) | `humnan_lung_cancer_workflow_by_R.ipynb` | the same steps in R, cross-checked against Python |
+| **Notebooks** (Python) | `human_lung_cancer_workflow.ipynb` (Steps 1-10), `notebooks/02-04` | read the analysis with figures and interpretation |
+| **Notebook** (R / Bioconductor) | `human_lung_cancer_workflow_by_R.ipynb` | an independent replication in R (Seurat, SpatialExperiment, imcRtools, Banksy, CellChat, spatstat), cross-checked against Python step by step |
 | **Snakemake pipeline** | `workflow/`, `config/` | re-run everything reproducibly from the raw download |
 
 ## What the analysis does
@@ -68,8 +85,8 @@ Each rule runs a script in `workflow/scripts/` inside `spatial_env` (via `conda 
 ## Repository layout
 
 ```
-humnan_lung_cancer_workflow.ipynb        core analysis, Python (Steps 1-10)
-humnan_lung_cancer_workflow_by_R.ipynb   core analysis, R / Bioconductor
+human_lung_cancer_workflow.ipynb        core analysis, Python (Steps 1-10)
+human_lung_cancer_workflow_by_R.ipynb   core analysis, R / Bioconductor
 notebooks/                               side analyses (02 re-segmentation, 03 reference mapping, 04 domains)
 xenium_utils.py                          shared paths, constants, helpers
 workflow/Snakefile                       pipeline rules

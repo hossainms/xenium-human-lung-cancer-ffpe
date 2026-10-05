@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xenium Lung Cancer TIME</title>
+<meta name="description" content="Single-cell spatial analysis of the tumour immune microenvironment in a 10x Genomics Xenium human lung cancer FFPE section: notebooks, a reproducible Snakemake pipeline and an interactive viewer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Imaging spatial transcriptomics &middot; 10x Genomics Xenium &middot; lung carcinoma FFPE</p>
+    <h1>Where do immune cells sit in a lung tumour, and which findings survive a critical look?</h1>
+    <p class="lede">An end-to-end, single-cell analysis of the tumour immune microenvironment in a public Xenium section,
+      built three ways: narrative notebooks in Python, an independent R / Bioconductor replication, and a reproducible
+      Snakemake pipeline. All three share one tested Python package, <code>ist_analysis</code>.</p>
+    <div class="actions">
+      <a class="btn primary" href="https://vitessce.io/#?url=https://hossainms.github.io/xenium-human-lung-cancer-ffpe/viewer/config.json">Explore the cells</a>
+      <a class="btn" href="#notebooks">Read the notebooks</a>
+      <a class="btn" href="report.html">Pipeline report</a>
+      <a class="btn" href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe">Code on GitHub</a>
+    </div>
+    <dl class="stats">
+      <div><dt>154,394</dt><dd>cells after QC</dd></div>
+      <div><dt>377</dt><dd>genes in the panel</dd></div>
+      <div><dt>33</dt><dd>annotated cell types</dd></div>
+      <div><dt>6</dt><dd>TLS-like aggregates</dd></div>
+    </dl>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="findings">
+  <h2>Key findings</h2>
+
+  <article class="finding">
+    <div class="text">
+      <span class="num">1</span>
+      <h3>CD8 T cells are excluded from the tumour</h3>
+      <p>Only 12% of CD8 T cells sit within 15 &micro;m of a tumour cell, against 34% for non-tumour cells in general.
+        The tumour border is lined by macrophages, dendritic cells and fibroblasts instead. Per 400 &micro;m tumour tile:
+        65% <em>excluded</em>, 26% <em>desert</em>, 9% <em>inflamed</em>, identical in Python and R.</p>
+    </div>
+    <figure><img src="images/immune_phenotypes.png" alt="Map of immune phenotypes per 400 micrometre tumour tile" loading="lazy"></figure>
+  </article>
+
+  <article class="finding">
+    <div class="text">
+      <span class="num">2</span>
+      <h3>Six tertiary lymphoid structure (TLS)-like aggregates</h3>
+      <p>B-cell cores with a T-cell rim, confirmed on the matched H&amp;E. CD8 T cells lose the lymphoid-homing receptor
+        CCR7 on the way from TLS to tumour (36% to 11%), and CCL19 to CCR7 cell contacts are enriched 2.4-fold in a
+        spatial permutation test.</p>
+    </div>
+    <figure><img src="images/tls_lineage_map.jpg" alt="Cell lineage map with the TLS-like aggregates marked" loading="lazy">
+      <img src="images/he_tls_window.jpg" alt="The largest TLS-like aggregate on the H&amp;E image" loading="lazy"></figure>
+  </article>
+
+  <article class="finding">
+    <div class="text">
+      <span class="num">3</span>
+      <h3>The same macrophage type changes state with location</h3>
+      <p>FCGR1A+ macrophages switch from a TREM2 / CTSK / LPL programme in stroma to MARCO / MCEMP1 / CXCL2 next to
+        tumour, in paired pseudobulk DESeq2 on spatial domains from BANKSY and CellCharter.</p>
+    </div>
+    <figure><img src="images/spatial_domains.jpg" alt="Spatial domains from BANKSY and CellCharter" loading="lazy"></figure>
+  </article>
+
+  <article class="finding plain">
+    <div class="text">
+      <span class="num">4</span>
+      <h3>The critical look</h3>
+      <p>Segmentation spillover is the dominant artefact in imaging spatial data: 19% of T cells carried tumour
+        transcripts. Re-segmentation with Proseg reduces this to 1.5%, and every finding above was re-tested on the
+        cleaner cells (CD8 exclusion, all six TLS and the CCR7 gradient hold). 42 of 60 'differentially expressed'
+        macrophage genes were neighbouring-cell spillover and are filtered out. Cell types were validated against the
+        Lung Cancer Atlas (892k cells): 92% lineage agreement, against an 87% ceiling for this panel.</p>
+    </div>
+  </article>
+</section>
+
+<section id="explore">
+  <h2>Explore</h2>
+  <div class="cards">
+    <a class="card" href="https://vitessce.io/#?url=https://hossainms.github.io/xenium-human-lung-cancer-ffpe/viewer/config.json">
+      <h3>Interactive cell viewer</h3>
+      <p>139,129 high-confidence cells in tissue and UMAP space. Colour by cell type, niche, spatial domain, TLS or
+        CD8 compartment, or by any of the 377 genes. Opens in Vitessce; best on a desktop
+        browser (about 40 MB of data).</p>
+    </a>
+    <a class="card" href="report.html">
+      <h3>Pipeline report</h3>
+      <p>The Snakemake report: workflow graph, runtimes, and the key figures and tables of every step, each with the code
+        and parameters that produced it.</p>
+    </a>
+    <a class="card" href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe">
+      <h3>Code</h3>
+      <p>The <code>ist_analysis</code> package, Snakemake workflow, configuration, unit tests and CI. Code under MIT,
+        text and figures under CC BY 4.0.</p>
+    </a>
+  </div>
+</section>
+
+<section id="notebooks">
+  <h2>Notebooks</h2>
+  <p>Rendered with their saved outputs; nothing to install.</p>
+  <table class="list">
+    <tbody>
+      <tr><td><a href="notebooks/01_core_python.html">01 &middot; Core analysis (Python)</a></td>
+        <td>Steps 1-10: download, QC, clustering, annotation, spatial statistics, H&amp;E, tumour immune microenvironment, squidpy</td></tr>
+      <tr><td><a href="notebooks/01_core_R.html">01 &middot; Core analysis (R)</a></td>
+        <td>Independent replication with Seurat, SpatialExperiment, imcRtools, Banksy, CellChat and spatstat, cross-checked against Python</td></tr>
+      <tr><td><a href="notebooks/02_resegmentation_proseg.html">02 &middot; Re-segmentation</a></td>
+        <td>Proseg re-segmentation, spillover before and after, and whether each finding survives</td></tr>
+      <tr><td><a href="notebooks/03_reference_mapping.html">03 &middot; Reference mapping</a></td>
+        <td>Cell types validated against the Lung Cancer Atlas, with a held-out-donor accuracy ceiling</td></tr>
+      <tr><td><a href="notebooks/04_spatial_domains.html">04 &middot; Spatial domains</a></td>
+        <td>BANKSY and CellCharter domains, and location-dependent macrophage states by pseudobulk DESeq2</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="pipeline">
+  <h2>One implementation, three ways to run it</h2>
+  <p>All analysis logic lives in <code>ist_analysis</code>, a package for imaging-based spatial transcriptomics
+    (Xenium, MERSCOPE, CosMx). Platform-specific code sits in a single adapter, <code>ist_analysis/io/xenium.py</code>;
+    everything else works on a standard AnnData. The notebooks and the Snakemake scripts call the same functions, and
+    unit tests on synthetic data run on every push.</p>
+  <figure class="wide"><img src="images/rulegraph.png" alt="Snakemake rule graph of the pipeline" loading="lazy">
+    <figcaption>Snakemake rule graph: the core chain from download to spatial analysis, with re-segmentation, atlas
+      mapping and spatial domains branching off.</figcaption></figure>
+</section>
+
+<section id="data">
+  <h2>Data and attribution</h2>
+  <p>Xenium Human Lung Cancer FFPE (Xenium v1, Human Multi-Tissue and Cancer panel), 10x Genomics public datasets,
+    CC BY 4.0. Lung Cancer Atlas (LuCA) core atlas, Salcher et al., <em>Cancer Cell</em> 2022, via CELLxGENE, CC BY 4.0.
+    Methods: Proseg, BANKSY, CellCharter, CellTypist, squidpy, scanpy, spatialdata, PyDESeq2; in R, Seurat,
+    SpatialExperiment, imcRtools, Banksy, SingleR, CellChat and spatstat.</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>MD Shakhaowat Hossain &middot; Tulane University School of Medicine</p>
+    <p>Code MIT &middot; text and figures CC BY 4.0 &middot;
+      <a href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe">github.com/hossainms/xenium-human-lung-cancer-ffpe</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

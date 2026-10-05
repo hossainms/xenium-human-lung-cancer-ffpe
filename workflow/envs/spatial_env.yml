@@ -105,6 +105,7 @@ dependencies:
       - multiscale-spatial-image==2.0.3
       - narwhals==2.26.0
       - natsort==8.4.0
+      - nbconvert==7.17.1
       - nest-asyncio2==1.7.3
       - networkx==3.7
       - numba==0.68.0
@@ -198,6 +199,7 @@ dependencies:
       - universal-pathlib==0.3.10
       - urllib3==2.8.0
       - validators==0.35.0
+      - vitessce==3.9.7
       - wcwidth==0.9.1
       - widgetsnbextension==4.0.16
       - wrapt==2.5.0

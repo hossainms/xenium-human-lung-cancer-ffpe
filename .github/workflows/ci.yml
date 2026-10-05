@@ -21,7 +21,7 @@ jobs:
           pip install --no-deps -e .
 
       - name: Lint
-        run: ruff check ist_analysis tests workflow
+        run: ruff check ist_analysis tests workflow site
 
       - name: Unit tests (synthetic data, no downloads)
         run: pytest -q

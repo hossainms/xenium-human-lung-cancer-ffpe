@@ -5,6 +5,8 @@
 
 **Where do immune cells sit in a lung tumour, what are they doing there, and which findings survive a critical look at the data?** An end-to-end, single-cell-resolution analysis of the 10x Genomics **Xenium In Situ** public dataset *Human Lung Cancer FFPE* (377-gene panel, ~162,000 cells), built three ways: narrative **notebooks** (Python, with an independent **R / Bioconductor** replication), and a reproducible **Snakemake pipeline** that regenerates every result from the raw download.
 
+**Project website: [hossainms.github.io/xenium-human-lung-cancer-ffpe](https://hossainms.github.io/xenium-human-lung-cancer-ffpe/)**, with the rendered notebooks, the pipeline report and an [interactive cell viewer](https://vitessce.io/#?url=https://hossainms.github.io/xenium-human-lung-cancer-ffpe/viewer/config.json) (Vitessce: 139,129 cells in tissue and UMAP space, coloured by cell type, niche, domain, TLS or any gene).
+
 ## Key findings
 
 **1. CD8 T cells are excluded from the tumour.** Only 12% of CD8 T cells sit within 15 µm of a tumour cell, against 34% for non-tumour cells in general; the tumour border is lined by macrophages, dendritic cells and fibroblasts instead. Per 400 µm tumour tile: 65% *excluded*, 26% *desert*, 9% *inflamed* (identical in Python and R).
@@ -88,6 +90,8 @@ Each rule runs a script in `workflow/scripts/` inside `spatial_env` (via `conda 
 
 **Report:** `python workflow/make_report.py report.html` (in `snakemake_env`) builds a self-contained HTML page with the workflow graph, runtimes, and the key figures and tables of every step, each with a caption (`workflow/report/`) and the code and parameters that produced it. It wraps `snakemake --report` and replaces local paths with `~`, so the page can be shared.
 
+**Website:** `python site/build_site.py` (in `spatial_env`) renders the notebooks, copies the report and writes the viewer data (AnnData zarr and Vitessce configuration) to `~/data/xenium_lung/site/`; `bash site/deploy.sh` publishes it to the `gh-pages` branch.
+
 **Tests:** `pytest` runs unit tests of the package on small synthetic datasets with known answers (QC rules, TLS detection, the contact test, the spillover filter, domain naming, reference-mapping helpers, annotation guards). GitHub Actions runs linting, the tests and a Snakemake dry run on every push.
 
 **Inspecting the workflow:** `snakemake -n` (what would run, and why), `snakemake --summary` (every output, the rule that made it, whether it is up to date).
@@ -110,6 +114,7 @@ workflow/report/                         report captions
 workflow/make_report.py                  shareable HTML report (local paths removed)
 workflow/rulegraph.png                   pipeline diagram
 config/                                  pipeline parameters and annotation decisions
+site/                                    project website: landing page, build and deploy scripts
 .github/workflows/ci.yml                 lint + tests + pipeline dry run
 pyproject.toml                           package metadata, lint and test settings
 LICENSE, LICENSE-CC-BY-4.0.md, CITATION.cff

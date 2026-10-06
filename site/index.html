@@ -212,35 +212,32 @@
 
     <section id="notebooks">
       <h2>Notebooks</h2>
-      <p>Rendered with their saved outputs; nothing to install.</p>
+      <p>Explore the analysis notebooks with saved outputs; no installation required to view them.</p>
       <table class="list">
         <tbody>
           <tr>
             <td><a href="notebooks/01_core_python.html">01 &middot; Core analysis (Python)</a></td>
-            <td>Steps 1-10: download, QC, clustering, annotation, spatial statistics, H&amp;E, tumour immune
-              microenvironment, squidpy</td>
+            <td>Steps 1&ndash;10: data download, quality control, clustering, cell annotation, spatial statistics with squidpy, H&amp;E integration, and tumour immune microenvironment analysis.</td>
           </tr>
           <tr>
             <td><a href="notebooks/01_core_R.html">01 &middot; Core analysis (R)</a></td>
-            <td>Independent replication with Seurat, SpatialExperiment, imcRtools, Banksy, CellChat and spatstat,
-              cross-checked against Python</td>
+            <td>R / Bioconductor replication using Seurat, SpatialExperiment, imcRtools, Banksy, CellChat, and spatstat, with results cross-checked against the Python analysis.</td>
           </tr>
           <tr>
-            <td><a href="notebooks/02_resegmentation_proseg.html">02 &middot; Re-segmentation</a></td>
-            <td>Proseg re-segmentation, spillover before and after, and whether each finding survives</td>
+            <td><a href="notebooks/02_resegmentation_proseg.html">02 &middot; Cell re-segmentation</a></td>
+            <td>Proseg re-segmentation, comparison of transcript spillover before and after re-segmentation, and assessment of whether the main findings persist.</td>
           </tr>
           <tr>
             <td><a href="notebooks/03_reference_mapping.html">03 &middot; Reference mapping</a></td>
-            <td>Cell types validated against the Lung Cancer Atlas, with a held-out-donor accuracy ceiling</td>
+            <td>Cell-type annotation assessment against the Lung Cancer Atlas, with held-out-donor evaluation to contextualise mapping accuracy.</td>
           </tr>
           <tr>
             <td><a href="notebooks/04_spatial_domains.html">04 &middot; Spatial domains</a></td>
-            <td>BANKSY and CellCharter domains, and location-dependent macrophage states by pseudobulk DESeq2</td>
+            <td>Spatial domain identification with BANKSY and CellCharter, followed by paired pseudobulk DESeq2 analysis of location-associated macrophage expression differences.</td>
           </tr>
           <tr>
             <td><a href="notebooks/05_he_foundation_model.html">05 &middot; H&amp;E foundation model</a></td>
-            <td>What a pathology foundation model (Phikon-v2) sees in the H&amp;E: cell types, genes and tissue domains
-              from morphology alone</td>
+            <td>Evaluation of Phikon-v2 H&amp;E features for predicting cell identities, gene expression, and spatial domains from tissue morphology.</td>
           </tr>
         </tbody>
       </table>

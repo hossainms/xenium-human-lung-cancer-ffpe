@@ -2,6 +2,7 @@
 
     python site/overview_figure.py [--out images/overview_figure.jpg]       # in spatial_env, from the repository root
     python site/overview_figure.py --thumbnail                             # 2 x 2 image tile for web cards
+    python site/overview_figure.py --robustness                            # re-segmentation robustness figure (finding 4)
 
 a  cell lineages across the section (Steps 6-7), with the windows of panels c-e
 b  spatial domains (CellCharter, notebook 04)
@@ -276,12 +277,56 @@ def thumbnail(out: Path):
     print(f"Saved {out} ({out.stat().st_size / 1e6:.1f} MB)")
 
 
+def robustness_figure(out: Path, tables: Path):
+    """Finding 4: (a) cross-lineage marker spillover, 10x vs Proseg (notebook 02, paired same cells); (b) CCR7 in CD8+ T
+    cells by compartment under both segmentations, with the tumour-marker spillover control."""
+    sp = pd.read_csv(tables / "nb02_paired_spillover.csv")
+    st = pd.read_csv(tables / "nb02_cd8_states_10x_vs_proseg.csv")
+    comps = ["TLS", "Stroma (> 50 um)", "Border (15-50 um)", "Tumour contact (<= 15 um)"]
+    labels = ["TLS", "Stroma\n(> 50 µm)", "Border\n(15-50 µm)", "Tumour contact\n(≤ 15 µm)"]
+    C10, CPS = "#9a9a9a", "#0f6e78"
+
+    fig, (a1, a2) = plt.subplots(2, 1, figsize=(7.2, 9.2), gridspec_kw={"hspace": 0.42})   # stacked: fits a narrow web column
+    sp = sp.sort_values("10x: % positive")
+    y = np.arange(len(sp))
+    for i, r in enumerate(sp.itertuples(index=False)):
+        a1.plot([r[3], r[4]], [i, i], color="#cccccc", lw=2.5, zorder=1)
+    a1.scatter(sp["10x: % positive"], y, color=C10, s=60, zorder=2, label="10x segmentation")
+    a1.scatter(sp["Proseg: % positive"], y, color=CPS, s=60, zorder=3, label="Proseg")
+    a1.set_yticks(y, [f"{c} cells with {m}" for c, m in zip(sp["cells (Step 6 lineage)"], sp["foreign markers"])], fontsize=8.5)
+    a1.set_xlabel("% of cells with markers of another lineage")
+    a1.set_title("Cross-lineage spillover, same cells", loc="left"); letter(a1, "a")
+    a1.legend(frameon=False, fontsize=8, loc="lower right")
+    for s_ in ("top", "right"):
+        a1.spines[s_].set_visible(False)
+
+    x = np.arange(len(comps))
+    for gene, ls, name in [("CCR7", "-", "CCR7 (biology)"), ("EPCAM", ":", "EPCAM (spillover control)")]:
+        for seg, col in [("10x", C10), ("Proseg", CPS)]:
+            v = st[(st["gene"] == gene) & (st["segmentation"] == seg)][comps].to_numpy().ravel()
+            a2.plot(x, v, ls=ls, marker="o", color=col, lw=2, label=f"{name}, {seg}")
+    a2.set_xticks(x, labels, fontsize=8.5)
+    a2.set_ylabel("% of CD8+ T cells positive")
+    a2.set_title("CCR7 gradient persists; tumour-marker control disappears", loc="left"); letter(a2, "b")
+    a2.legend(frameon=False, fontsize=7.5, loc="upper right")
+    for s_ in ("top", "right"):
+        a2.spines[s_].set_visible(False)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white", pil_kwargs={"quality": 90, "optimize": True})
+    print(f"Saved {out} ({out.stat().st_size / 1e6:.1f} MB)")
+
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--out", default="images/overview_figure.jpg")
     p.add_argument("--thumbnail", action="store_true", help="write the 2 x 2 image tile for web cards instead")
+    p.add_argument("--robustness", action="store_true", help="write the re-segmentation robustness figure (finding 4) instead")
+    p.add_argument("--tables", default="~/data/xenium_lung/pipeline/tables", help="pipeline tables (for --robustness)")
     args = p.parse_args()
-    if args.thumbnail:
+    if args.robustness:
+        robustness_figure(Path(args.out if args.out != "images/overview_figure.jpg" else "images/resegmentation_robustness.jpg"),
+                          Path(args.tables).expanduser())
+    elif args.thumbnail:
         thumbnail(Path(args.out if args.out != "images/overview_figure.jpg" else "images/overview_thumbnail.jpg"))
     else:
         main(Path(args.out))

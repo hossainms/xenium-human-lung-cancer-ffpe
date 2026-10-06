@@ -75,6 +75,7 @@ img { max-width: 100%; height: auto; display: block; border-radius: 6px; }
 .finding.plain .text { max-width: 46em; }
 .finding figure { margin: 0; display: grid; gap: 10px; }
 .finding p { color: var(--muted); margin: 0; }
+.finding p + p { margin-top: 10px; }
 .num {
   display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
   background: var(--accent); color: var(--accent-text); font-weight: 700; font-size: 0.9rem; margin-bottom: 10px;

@@ -3,6 +3,7 @@
     python site/overview_figure.py [--out images/overview_figure.jpg]       # in spatial_env, from the repository root
     python site/overview_figure.py --thumbnail                             # 2 x 2 image tile for web cards
     python site/overview_figure.py --robustness                            # re-segmentation robustness figure (finding 4)
+    python site/overview_figure.py --he                                    # H&E foundation-model figure (finding 5)
 
 a  cell lineages across the section (Steps 6-7), with the windows of panels c-e
 b  spatial domains (CellCharter, notebook 04)
@@ -316,14 +317,63 @@ def robustness_figure(out: Path, tables: Path):
     print(f"Saved {out} ({out.stat().st_size / 1e6:.1f} MB)")
 
 
+def he_figure(out: Path, folder: Path):
+    """Finding 5 (notebook 05 outputs): (a) recall per cell type from the H&E cell features (26 classes, block-split
+    cross-validation); (b) per-gene predictability from H&E, single-cell vs regional expression."""
+    obs = ad.read_h5ad(folder / "he_embeddings_phikon-v2.h5ad", backed="r").obs
+    rec = (obs["pred_cell_type_he"].astype(str) == obs["cell_type"].astype(str)).groupby(obs["cell_type"].astype(str)).mean() * 100
+    lin = obs.groupby(obs["cell_type"].astype(str))["lineage"].first().astype(str)
+    rec = rec.sort_values()
+    genes = pd.read_csv(folder / "gene_predictability.csv", index_col=0)
+    own, reg = genes["r, own expression (cell tokens)"], genes["r, regional expression (112 um)"]
+
+    fig, (a1, a2) = plt.subplots(2, 1, figsize=(7.2, 11.5), gridspec_kw={"height_ratios": [1.45, 1], "hspace": 0.28})
+    a1.barh(np.arange(len(rec)), rec.to_numpy(), color=[LIN[lin[t]] for t in rec.index], height=0.72)
+    a1.set_yticks(np.arange(len(rec)), rec.index, fontsize=7.5)
+    chance = 100 / len(rec)
+    a1.axvline(chance, color="black", ls=":", lw=1)
+    a1.text(chance + 0.8, -0.9, f"chance ({chance:.0f}%)", fontsize=7.5, va="top")
+    a1.set_xlabel("% of cells of this type recognised from the H&E (held-out tissue blocks)")
+    a1.set_xlim(0, 100); a1.set_ylim(-1.6, len(rec) - 0.4)
+    a1.set_title("Cell-type recognition from H&E features (26 classes)", loc="left"); letter(a1, "a")
+    a1.legend([Line2D([], [], marker="s", ls="", color=c, markersize=6) for c in LIN.values()], list(LIN), fontsize=7, frameon=False,
+              loc="lower right", ncol=1)
+    for s_ in ("top", "right"):
+        a1.spines[s_].set_visible(False)
+
+    a2.scatter(own, reg, s=10, color="#0f6e78", alpha=0.55, linewidths=0)
+    lim = [min(-0.05, own.min(), reg.min()), 1.0]
+    a2.plot(lim, lim, color="grey", lw=0.8, ls=":")
+    for g in ["PDCD1", "CD274", "LAG3"]:
+        a2.scatter(own[g], reg[g], s=26, color="#d62728", zorder=3)
+        offset = {"PDCD1": (8, -4), "CD274": (-36, 6), "LAG3": (8, -8)}[g]
+        a2.annotate({"PDCD1": "PD-1", "CD274": "PD-L1", "LAG3": "LAG-3"}[g], (own[g], reg[g]), xytext=offset, textcoords="offset points",
+                    fontsize=8, color="#d62728")
+    for g in ["EPCAM", "MYH11", "MS4A1", "CCR7", "CD8A"]:
+        a2.annotate(g, (own[g], reg[g]), xytext=(4, 3), textcoords="offset points", fontsize=7.5)
+    a2.set_xlabel(f"r, the cell's own expression (median {own.median():.2f})")
+    a2.set_ylabel(f"r, regional expression within 50 µm (median {reg.median():.2f})")
+    a2.set_xlim(lim); a2.set_ylim(lim)
+    a2.set_title("Gene expression predicted from H&E: 377 genes", loc="left"); letter(a2, "b")
+    for s_ in ("top", "right"):
+        a2.spines[s_].set_visible(False)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white", pil_kwargs={"quality": 90, "optimize": True})
+    print(f"Saved {out} ({out.stat().st_size / 1e6:.1f} MB)")
+
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--out", default="images/overview_figure.jpg")
     p.add_argument("--thumbnail", action="store_true", help="write the 2 x 2 image tile for web cards instead")
     p.add_argument("--robustness", action="store_true", help="write the re-segmentation robustness figure (finding 4) instead")
     p.add_argument("--tables", default="~/data/xenium_lung/pipeline/tables", help="pipeline tables (for --robustness)")
+    p.add_argument("--he", action="store_true", help="write the H&E foundation-model figure (finding 5) instead")
     args = p.parse_args()
-    if args.robustness:
+    if args.he:
+        he_figure(Path(args.out if args.out != "images/overview_figure.jpg" else "images/he_foundation_model.jpg"),
+                  xu.PROCESSED_DIR / "he_foundation_model")
+    elif args.robustness:
         robustness_figure(Path(args.out if args.out != "images/overview_figure.jpg" else "images/resegmentation_robustness.jpg"),
                           Path(args.tables).expanduser())
     elif args.thumbnail:

@@ -7,7 +7,7 @@
 
 *Where are immune cells located within a lung tumour, and which findings hold up under critical evaluation?*
 
-An end-to-end, single-cell analysis of the tumour immune microenvironment in the 10x Genomics **Xenium In Situ** public dataset *Human Lung Cancer FFPE* (lung adenocarcinoma; 377-gene panel, ~162,000 cells), with every key finding tested against technical artefacts. It is built three ways: Python **notebooks**, an independent **R / Bioconductor** replication and a reproducible **Snakemake pipeline** that regenerates every result from the raw download, all sharing one tested Python package, `ist_analysis`.
+An end-to-end, single-cell analysis of the tumour immune microenvironment in the 10x Genomics **Xenium In Situ** public dataset *Human Lung Cancer FFPE* (lung adenocarcinoma; 377-gene panel, ~162,000 cells), with every key finding tested against technical artefacts. It is built three ways: Python **notebooks**, an independent **R / Bioconductor** replication and a reproducible **Snakemake pipeline** that regenerates every result from the raw download. The Python notebooks and the pipeline share one tested Python package, `ist_analysis`; the R notebook is an independent re-implementation used to cross-check the results.
 
 **Project website: [hossainms.github.io/xenium-human-lung-cancer-ffpe](https://hossainms.github.io/xenium-human-lung-cancer-ffpe/)**, with the rendered notebooks, the pipeline report and an [interactive cell viewer](https://vitessce.io/#?url=https://hossainms.github.io/xenium-human-lung-cancer-ffpe/viewer/config.json) (Vitessce: 139,129 cells in tissue and UMAP space, coloured by cell type, niche, domain, TLS or any gene).
 
@@ -44,7 +44,7 @@ An end-to-end, single-cell analysis of the tumour immune microenvironment in the
 
 ![H&E foundation model](images/he_foundation_model.jpg)
 
-## The analysis, three ways, one implementation
+## One implementation, two execution paths
 
 All analysis logic lives in one Python package, **`ist_analysis`**: analysis functions for **imaging-based spatial transcriptomics (iST)**, the platform family of Xenium, MERSCOPE and CosMx. Everything specific to one platform's output files sits in an adapter, `ist_analysis/io/xenium.py` (loading the bundle, imaging tiles, negative-control probes, pixel size, the vendor's own clustering); every other module works on a standard AnnData (counts, cell centroids in µm, cell metadata), so another iST platform needs one new adapter, not new analysis code. The Python notebooks (narrative, figures, interpretation) and the Snakemake scripts (reproducible batch runs) both call the same functions, so every result has a single implementation, covered by unit tests.
 

@@ -41,8 +41,7 @@
         tissue section,
         with every key finding tested against technical artefacts. It is built three ways (Python notebooks, an
         independent
-        R / Bioconductor replication and a reproducible Snakemake workflow), all sharing one tested Python package,
-        <code>ist_analysis</code>.
+        R / Bioconductor replication and a reproducible Snakemake workflow); the Python notebooks and the workflow share one tested Python package, <code>ist_analysis</code>.
       </p>
       <div class="actions">
         <a class="btn primary"
@@ -244,13 +243,15 @@
     </section>
 
     <section id="pipeline">
-      <h2>One implementation, three ways to run it</h2>
-      <p>All analysis logic lives in <code>ist_analysis</code>, a package for imaging-based spatial transcriptomics
-        (Xenium, MERSCOPE, CosMx). Platform-specific code sits in a single adapter,
-        <code>ist_analysis/io/xenium.py</code>;
-        everything else works on a standard AnnData. The notebooks and the Snakemake scripts call the same functions,
-        and
-        unit tests on synthetic data run on every push.</p>
+      <h2>One implementation, two execution paths</h2>
+      <p>The analysis logic is centralised in <code>ist_analysis</code>, a package for imaging-based spatial transcriptomics.
+        Xenium-specific input handling is isolated in <code>ist_analysis/io/xenium.py</code>, while downstream functions
+        operate on a standard AnnData object.</p>
+      <p>The Python notebooks and the Snakemake workflow call the same analytical functions, keeping the implementation
+        consistent across execution paths. The R notebook is an independent re-implementation in R / Bioconductor, used to
+        cross-check the results. Unit tests using synthetic data run on every push.</p>
+      <p>This separation of input handling from analysis provides a foundation for extending the package to other platforms,
+        including MERSCOPE and CosMx.</p>
       <figure class="wide"><img src="images/rulegraph.png" alt="Snakemake rule graph of the pipeline" loading="lazy">
         <figcaption>Snakemake rule graph: the core chain from download to spatial analysis, with re-segmentation, atlas
           mapping and spatial domains branching off.</figcaption>

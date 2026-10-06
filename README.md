@@ -153,17 +153,19 @@ Raw data and results are never stored in this repository; the pipeline downloads
 
 Methods used and cited: Proseg (Jones et al., *Nature Methods* 2025), BANKSY (Singhal et al., *Nature Genetics* 2024), CellCharter (Varrone et al., *Nature Genetics* 2024), CellTypist (Dominguez Conde et al., *Science* 2022), squidpy (Palla et al., *Nature Methods* 2022), scanpy, spatialdata, PyDESeq2, and in R: Seurat, SpatialExperiment, imcRtools, Banksy, SingleR, CellChat, spatstat. See `CITATION.cff`.
 
-## Author and citation
+## How to cite
 
-Design, analysis, code and interpretation: **MD Shakhaowat Hossain**, PhD Candidate, Tulane University School of Medicine.
+Project design, analysis, software development, and interpretation by **MD Shakhaowat Hossain**, PhD Candidate, Tulane University School of Medicine.
 
-If you use this analysis or its code, please cite it (GitHub's "Cite this repository" button reads `CITATION.cff`):
+If you use this analysis or its code, please cite:
 
 > Hossain, M. S. (2026). *Xenium human lung cancer (FFPE): Spatial analysis of the tumour immune microenvironment* (Version 1.1.0) [Computer software]. GitHub. https://github.com/hossainms/xenium-human-lung-cancer-ffpe
 
-and cite the datasets and methods listed above.
+Citation metadata is provided in `CITATION.cff` and is accessible through GitHub's "Cite this repository" button. Please also cite the datasets and methods listed above, as applicable to your use.
 
-**Using this work?** I would be glad to hear how you are applying the analysis or code, and happy to answer questions or discuss related ideas. Feel free to reach out at [shakhaowatdu@gmail.com](mailto:shakhaowatdu@gmail.com).
+## Contact
+
+Questions, feedback, and discussions about applications of this work are welcome. Contact me at [shakhaowatdu@gmail.com](mailto:shakhaowatdu@gmail.com).
 
 ## Licence
 

@@ -131,3 +131,6 @@ footer p { margin: 4px 0; }
 .share-menu-panel a, .share-menu-panel button { text-align: left; font: 500 0.85rem Inter, system-ui, sans-serif; padding: 6px 10px;
   border-radius: 6px; color: var(--text); background: none; border: 0; cursor: pointer; text-decoration: none; }
 .share-menu-panel a:hover, .share-menu-panel button:hover { background: var(--bg); color: var(--accent); }
+
+/* second heading inside a section (e.g. Contact under How to cite) */
+h2.subhead { font-size: 1.25rem; margin: 32px 0 12px; }

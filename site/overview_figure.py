@@ -1,6 +1,7 @@
 """Overview figure: one panel from each layer of the analysis (README, project website and portfolio).
 
     python site/overview_figure.py [--out images/overview_figure.jpg]       # in spatial_env, from the repository root
+    python site/overview_figure.py --thumbnail                             # 2 x 2 image tile for web cards
 
 a  cell lineages across the section (Steps 6-7), with the windows of panels c-e
 b  spatial domains (CellCharter, notebook 04)
@@ -231,7 +232,56 @@ def main(out: Path):
     print(f"Saved {out} ({out.stat().st_size / 1e6:.1f} MB)")
 
 
+def thumbnail(out: Path):
+    """2 x 2 image tile without text for web cards: TLS1 on H&E, the same with Xenium lineages, the 10x segmentation on
+    DAPI (window c) and the neighbourhood graph (window d)."""
+    a = xu.load_step("time")
+    xy = a.obsm["spatial"]
+    lineage = a.obs["lineage"].astype(str).to_numpy()
+    tls1 = xy[(a.obs["tls_id"] == "TLS1").to_numpy()].mean(axis=0)
+    ann = ad.read_h5ad(xu.STEP_FILES["annotated"], backed="r")
+    lineage_10x = dict(zip(ann.obs_names, ann.obs["lineage"].astype(str)))
+
+    fig = plt.figure(figsize=(12, 12), dpi=100)
+    gs = fig.add_gridspec(2, 2, wspace=0.012, hspace=0.012, left=0, right=1, top=1, bottom=0)
+    inside = lambda b: (xy[:, 0] > b[0]) & (xy[:, 0] < b[2]) & (xy[:, 1] > b[1]) & (xy[:, 1] < b[3])  # noqa: E731
+
+    box = bbox(tls1[0], tls1[1], TLS_SIDE)
+    img = mo.aligned_he(xu.HE_PATH, he.load_alignment(xu.HE_ALIGNMENT_PATH), box, 0.25, 0)
+    for k in range(2):
+        ax = fig.add_subplot(gs[0, k])
+        ax.imshow(img, extent=[box[0], box[2], box[3], box[1]])
+        if k == 1:
+            m = inside(box)
+            ax.scatter(xy[m, 0], xy[m, 1], s=22, c=[LIN[x] for x in lineage[m]], edgecolors="white", linewidths=0.5)
+        ax.set_xlim(box[0], box[2]); ax.set_ylim(box[3], box[1]); ax.axis("off")
+
+    box = bbox(*SEG_WINDOW)
+    ax = fig.add_subplot(gs[1, 0])
+    segmentation_panel(ax, tenx_polygons(xu.OUTS_DIR, box), lineage_10x, tumour_rna(ann.to_memory()), dapi_crop(box),
+                       transcripts(box, TUMOUR_GENES + T_GENES), box, "")
+    ax.axis("off")
+
+    box = bbox(*GRAPH_WINDOW)
+    ax = fig.add_subplot(gs[1, 1])
+    m = inside(box)
+    G = a.obsp["spatial_connectivities"].tocoo()
+    keep = m[G.row] & m[G.col] & (G.row < G.col)
+    ax.add_collection(LineCollection(np.stack([xy[G.row[keep]], xy[G.col[keep]]], axis=1), colors="#9a9a9a", linewidths=0.9, zorder=1))
+    ax.scatter(xy[m, 0], xy[m, 1], s=46, c=[LIN[x] for x in lineage[m]], edgecolors="white", linewidths=0.6, zorder=2)
+    ax.set_xlim(box[0], box[2]); ax.set_ylim(box[3], box[1]); ax.set_aspect("equal"); ax.axis("off")
+
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=100, facecolor="white", pil_kwargs={"quality": 88, "optimize": True})
+    print(f"Saved {out} ({out.stat().st_size / 1e6:.1f} MB)")
+
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--out", default="images/overview_figure.jpg")
-    main(Path(p.parse_args().out))
+    p.add_argument("--thumbnail", action="store_true", help="write the 2 x 2 image tile for web cards instead")
+    args = p.parse_args()
+    if args.thumbnail:
+        thumbnail(Path(args.out if args.out != "images/overview_figure.jpg" else "images/overview_thumbnail.jpg"))
+    else:
+        main(Path(args.out))

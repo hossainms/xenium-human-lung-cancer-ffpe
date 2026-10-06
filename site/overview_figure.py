@@ -4,7 +4,7 @@
 
 a  cell lineages across the section (Steps 6-7), with the windows of panels c-e
 b  spatial domains (CellCharter, notebook 04)
-c  segmentation: 10x vs. Proseg outlines; T cells assigned tumour (EPCAM / MALL) transcripts are filled (notebook 02)
+c  segmentation on DAPI: 10x vs. Proseg outlines with tumour and T-cell transcripts; T cells assigned tumour RNA outlined (notebook 02)
 d  spatial neighbourhood graph: Delaunay edges <= 30 um at a tumour-stroma border (Step 7a)
 e  TLS1 on the matched H&E with Xenium cells coloured by lineage (Steps 7-8)
 """
@@ -33,10 +33,13 @@ from matplotlib.patches import Rectangle  # noqa: E402
 plt.rcParams.update({"font.family": ["Arial", "Helvetica", "DejaVu Sans"], "font.size": 9, "axes.titlesize": 10,
                      "axes.titleweight": "bold", "axes.titlelocation": "left", "axes.linewidth": 0.6})
 LIN = xu.LINEAGE_COLORS
-SEG_WINDOW = (5730.0, 2070.0, 60.0)       # centre x, y and side (um): tumour edge where 10x T cells carry tumour transcripts
+SEG_WINDOW = (4260.0, 1980.0, 120.0)      # notebook 02's window: the 120 um tile where tumour and T-cell transcripts meet most densely
 GRAPH_WINDOW = (3375.0, 2025.0, 150.0)    # most lineage-diverse tumour / stroma / immune border window
 TLS_SIDE = 160.0
-TUMOUR_GENES = ["EPCAM", "MALL"]
+TUMOUR_GENES, T_GENES = ["EPCAM", "MALL"], ["CD3E", "TRAC"]
+# Transcript dots on the dark DAPI image: lighter tints of the lineage colours (tumour = blue, T cell = orange)
+TX_COLOURS = {"tumour": "#6fb3ff", "T": "#ff9a52"}
+FLAG = "#ff3fd2"                           # outline of a T cell assigned tumour transcripts
 
 
 def bbox(cx, cy, side):
@@ -89,18 +92,43 @@ def tumour_rna(adata, genes=TUMOUR_GENES) -> dict:
     return dict(zip(adata.obs_names, np.asarray(X[:, cols].sum(axis=1)).ravel()))
 
 
-def segmentation_panel(ax, polys, lineage_of, tumour_of, box, title):
-    """Outlines coloured by lineage; T cells assigned tumour (EPCAM / MALL) transcripts are filled.
-    Returns (T cells with tumour transcripts, T cells) among outlines centred in the window."""
+def dapi_crop(box):
+    """DAPI (morphology_focus channel 0) for the window, read tile by tile, contrast-stretched to 0-1."""
+    import tifffile
+    import zarr
+
+    px = xu.PIXEL_SIZE_UM
+    store = tifffile.imread(xu.OUTS_DIR / "morphology_focus" / "morphology_focus_0000.ome.tif", aszarr=True, level=0)
+    img = zarr.open(store, mode="r")
+    r0, c0, r1, c1 = int(box[1] / px), int(box[0] / px), int(box[3] / px), int(box[2] / px)
+    d = np.asarray(img[0, r0:r1, c0:c1] if img.ndim == 3 else img[r0:r1, c0:c1]).astype(float)
+    store.close()
+    lo, hi = np.percentile(d, [1, 99.7])
+    return np.clip((d - lo) / (hi - lo), 0, 1)
+
+
+def transcripts(box, genes):
+    x0, y0, x1, y1 = box
+    t = pq.read_table(xu.OUTS_DIR / "transcripts.parquet", columns=["feature_name", "x_location", "y_location", "qv"],
+                      filters=[("x_location", ">", x0), ("x_location", "<", x1), ("y_location", ">", y0), ("y_location", "<", y1),
+                               ("qv", ">=", 20)]).to_pandas()
+    t["feature_name"] = t["feature_name"].astype(str)
+    return t[t["feature_name"].isin(genes)]
+
+
+def segmentation_panel(ax, polys, lineage_of, tumour_of, dapi, tx, box, title):
+    """DAPI with cell outlines (yellow) and tumour / T-cell transcripts; T cells that the method assigned tumour
+    transcripts (its own count matrix) get a bold magenta outline. Returns (flagged T cells, T cells) centred in the window."""
+    ax.imshow(dapi, cmap="gray", extent=[box[0], box[2], box[3], box[1]])
     keys = list(polys)
-    edge = [LIN.get(lineage_of.get(k), "#9a9a9a") for k in keys]
     is_t = [lineage_of.get(k) == "T / NK" for k in keys]
     hit = [t and tumour_of.get(k, 0) > 0 for k, t in zip(keys, is_t)]
-    face = [(*matplotlib.colors.to_rgb(LIN["Epithelial"]), 0.45) if h else "none" for h in hit]
-    ax.add_collection(PolyCollection([polys[k] for k in keys], facecolors=face, edgecolors=edge, linewidths=1.1))
-    ax.set_xlim(box[0], box[2]); ax.set_ylim(box[3], box[1]); ax.set_aspect("equal"); tidy(ax)
-    for sp in ax.spines.values():
-        sp.set_visible(True); sp.set_color("#bbbbbb")
+    ax.add_collection(PolyCollection([polys[k] for k in keys], facecolors="none", edgecolors="#f5d547", linewidths=0.6, alpha=0.9))
+    ax.add_collection(PolyCollection([polys[k] for k, h in zip(keys, hit) if h], facecolors="none", edgecolors=FLAG, linewidths=1.8))
+    for genes, colour in [(TUMOUR_GENES, TX_COLOURS["tumour"]), (T_GENES, TX_COLOURS["T"])]:
+        t = tx[tx["feature_name"].isin(genes)]
+        ax.scatter(t["x_location"], t["y_location"], s=3, color=colour, linewidths=0, zorder=3)
+    ax.set_xlim(box[0], box[2]); ax.set_ylim(box[3], box[1]); tidy(ax)
     centred = [box[0] < polys[k].mean(axis=0)[0] < box[2] and box[1] < polys[k].mean(axis=0)[1] < box[3] for k in keys]
     n_t = sum(t and c for t, c in zip(is_t, centred)); n_hit = sum(h and c for h, c in zip(hit, centred))
     ax.set_title(title.format(hit=n_hit, n=n_t), fontsize=9, fontweight="normal")
@@ -150,23 +178,24 @@ def main(out: Path):
     lax.legend([Line2D([], [], marker="o", ls="", color=c, markersize=6) for c in LIN.values()], list(LIN), loc="center",
                ncol=7, fontsize=8, frameon=False, handletextpad=0.2, columnspacing=1.2)
 
-    # ---- c: segmentation, 10x vs Proseg (each method's own transcript assignment) --------------------------------------
+    # ---- c: segmentation on DAPI, 10x vs Proseg (each method's own transcript-to-cell assignment) ------------------
     box = bbox(*SEG_WINDOW)
+    dapi, tx = dapi_crop(box), transcripts(box, TUMOUR_GENES + T_GENES)
     c1, c2 = fig.add_subplot(gs[2, 0:3]), fig.add_subplot(gs[2, 3:6])
-    tenx = tenx_polygons(xu.OUTS_DIR, box)
-    h10, n10 = segmentation_panel(c1, tenx, lineage_10x, tumour_rna(ann.to_memory()), box,
+    h10, n10 = segmentation_panel(c1, tenx_polygons(xu.OUTS_DIR, box), lineage_10x, tumour_rna(ann.to_memory()), dapi, tx, box,
                                   "10x segmentation: {hit} of {n} T cells carry tumour RNA")
     pro = proseg_polygons(xu.PROCESSED_DIR / "resegmentation" / "proseg", box)
     pro_counts = tumour_rna(ad.read_h5ad(xu.PROCESSED_DIR / "resegmentation" / f"{xu.SAMPLE}_proseg_counts.h5ad"))
     polys = {orig: max(parts, key=len) for _, (orig, parts) in pro.items() if isinstance(orig, str)}   # main outline per cell
-    hp, npro = segmentation_panel(c2, polys, lineage_10x, pro_counts, box, "Proseg: {hit} of {n} T cells carry tumour RNA")
+    hp, npro = segmentation_panel(c2, polys, lineage_10x, pro_counts, dapi, tx, box, "Proseg: {hit} of {n} T cells carry tumour RNA")
     print(f"  panel c: T cells assigned EPCAM/MALL transcripts: 10x {h10}/{n10}, Proseg {hp}/{npro}")
-    scale_bar(c2, box[0] + 4, box[3] - 4, 20, "20 µm")
+    scale_bar(c1, box[0] + 6, box[3] - 6, 20, "20 µm", color="white")
     c1.text(0.0, 1.10, "Re-segmentation removes tumour transcripts from T cells", transform=c1.transAxes, fontsize=10, fontweight="bold")
     c1.text(-0.01, 1.10, "c", transform=c1.transAxes, fontsize=14, fontweight="bold", va="bottom", ha="right")
-    c2.legend([Rectangle((0, 0), 1, 1, facecolor=(*matplotlib.colors.to_rgb(LIN["Epithelial"]), 0.45), edgecolor=LIN["T / NK"])],
-              ["T cell assigned tumour transcripts (EPCAM / MALL); outlines coloured by lineage"], loc="upper center",
-              bbox_to_anchor=(-0.05, -0.02), fontsize=7.5, frameon=False, handlelength=1.2)
+    handles = [Line2D([], [], marker="o", ls="", color=TX_COLOURS[k], markersize=4) for k in ("tumour", "T")]
+    handles += [Line2D([], [], color="#f5d547", lw=1), Line2D([], [], color=FLAG, lw=2)]
+    c2.legend(handles, ["tumour RNA (EPCAM, MALL)", "T-cell RNA (CD3E, TRAC)", "cell outline", "T cell assigned tumour RNA"],
+              loc="upper center", bbox_to_anchor=(-0.05, -0.02), ncol=4, fontsize=7.5, frameon=False, handletextpad=0.3, columnspacing=1.0)
 
     # ---- d: spatial neighbourhood graph -------------------------------------------------------------------------------
     ax = fig.add_subplot(gs[2, 6:9])

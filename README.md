@@ -1,11 +1,13 @@
-# Xenium human lung cancer (FFPE): spatial analysis of the tumour immune microenvironment
+# Mapping the Immune Landscape of Lung Cancer with Xenium Spatial Transcriptomics
 
 **MD Shakhaowat Hossain** · PhD Candidate, Tulane University School of Medicine
 
 [![CI](https://github.com/hossainms/xenium-human-lung-cancer-ffpe/actions/workflows/ci.yml/badge.svg)](https://github.com/hossainms/xenium-human-lung-cancer-ffpe/actions/workflows/ci.yml)
 ![Python 3.12](https://img.shields.io/badge/python-3.12-blue) ![Snakemake 9](https://img.shields.io/badge/snakemake-9-green) ![Licence: MIT + CC BY 4.0](https://img.shields.io/badge/licence-MIT%20%2B%20CC%20BY%204.0-lightgrey)
 
-**Where do immune cells sit in a lung tumour, what are they doing there, and which findings survive a critical look at the data?** An end-to-end, single-cell-resolution analysis of the 10x Genomics **Xenium In Situ** public dataset *Human Lung Cancer FFPE* (377-gene panel, ~162,000 cells), built three ways: narrative **notebooks** (Python, with an independent **R / Bioconductor** replication), and a reproducible **Snakemake pipeline** that regenerates every result from the raw download.
+*Where are immune cells located within a lung tumour, and which findings hold up under critical evaluation?*
+
+An end-to-end, single-cell analysis of the tumour immune microenvironment in the 10x Genomics **Xenium In Situ** public dataset *Human Lung Cancer FFPE* (lung adenocarcinoma; 377-gene panel, ~162,000 cells), with every key finding tested against technical artefacts. It is built three ways: Python **notebooks**, an independent **R / Bioconductor** replication and a reproducible **Snakemake pipeline** that regenerates every result from the raw download, all sharing one tested Python package, `ist_analysis`.
 
 **Project website: [hossainms.github.io/xenium-human-lung-cancer-ffpe](https://hossainms.github.io/xenium-human-lung-cancer-ffpe/)**, with the rendered notebooks, the pipeline report and an [interactive cell viewer](https://vitessce.io/#?url=https://hossainms.github.io/xenium-human-lung-cancer-ffpe/viewer/config.json) (Vitessce: 139,129 cells in tissue and UMAP space, coloured by cell type, niche, domain, TLS or any gene).
 

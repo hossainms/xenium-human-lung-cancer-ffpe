@@ -119,3 +119,15 @@ footer p { margin: 4px 0; }
 .share-pill { font: 500 0.82rem Inter, system-ui, sans-serif; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line);
   background: var(--surface); color: var(--text); text-decoration: none; cursor: pointer; }
 .share-pill:hover { border-color: var(--accent); }
+
+/* share icon menu (top of page) */
+.share-menu { position: relative; display: inline-block; align-self: center; }
+.share-menu summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); background: var(--surface); }
+.share-menu summary::-webkit-details-marker { display: none; }
+.share-menu summary:hover, .share-menu[open] summary { border-color: var(--accent); color: var(--accent); }
+.share-menu-panel { position: absolute; left: 0; top: calc(100% + 6px); z-index: 30; min-width: 150px; padding: 6px; display: flex;
+  flex-direction: column; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+.share-menu-panel a, .share-menu-panel button { text-align: left; font: 500 0.85rem Inter, system-ui, sans-serif; padding: 6px 10px;
+  border-radius: 6px; color: var(--text); background: none; border: 0; cursor: pointer; text-decoration: none; }
+.share-menu-panel a:hover, .share-menu-panel button:hover { background: var(--bg); color: var(--accent); }

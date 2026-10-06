@@ -1,202 +1,302 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Xenium Lung Cancer Immune Landscape</title>
-<meta name="description" content="An end-to-end, single-cell analysis of the tumour immune microenvironment in a public 10x Genomics Xenium lung adenocarcinoma section, with every key finding tested against technical artefacts.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Mapping the Immune Landscape of Lung Cancer with Xenium Spatial Transcriptomics">
-<meta property="og:description" content="An end-to-end, single-cell analysis of the tumour immune microenvironment in a public 10x Genomics Xenium lung adenocarcinoma section, with every key finding tested against technical artefacts.">
-<meta property="og:url" content="https://hossainms.github.io/xenium-human-lung-cancer-ffpe/">
-<meta property="og:image" content="https://hossainms.github.io/xenium-human-lung-cancer-ffpe/images/overview_figure.jpg">
-<meta property="og:image:alt" content="Overview figure: cell lineages, spatial domains, segmentation on DAPI, a spatial neighbourhood graph and a tertiary lymphoid structure on H&amp;E">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="author" content="MD Shakhaowat Hossain">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Xenium Lung Cancer Immune Landscape</title>
+  <meta name="description"
+    content="An end-to-end, single-cell analysis of the tumour immune microenvironment in a public 10x Genomics Xenium lung adenocarcinoma section, with every key finding tested against technical artefacts.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mapping the Immune Landscape of Lung Cancer with Xenium Spatial Transcriptomics">
+  <meta property="og:description"
+    content="An end-to-end, single-cell analysis of the tumour immune microenvironment in a public 10x Genomics Xenium lung adenocarcinoma section, with every key finding tested against technical artefacts.">
+  <meta property="og:url" content="https://hossainms.github.io/xenium-human-lung-cancer-ffpe/">
+  <meta property="og:image"
+    content="https://hossainms.github.io/xenium-human-lung-cancer-ffpe/images/overview_figure.jpg">
+  <meta property="og:image:alt"
+    content="Overview figure: cell lineages, spatial domains, segmentation on DAPI, a spatial neighbourhood graph and a tertiary lymphoid structure on H&amp;E">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="author" content="MD Shakhaowat Hossain">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header class="hero">
-  <div class="wrap">
-    <p class="eyebrow">Imaging-based spatial transcriptomics &middot; 10x Genomics Xenium &middot; FFPE lung adenocarcinoma</p>
-    <h1>Mapping the Immune Landscape of Lung Cancer with Xenium Spatial Transcriptomics</h1>
-    <p class="subtitle">Where are immune cells located within a lung tumour, and which findings hold up under critical evaluation?</p>
-    <p class="byline"><strong>MD Shakhaowat Hossain</strong> &middot; PhD Candidate, Tulane University School of Medicine</p>
-    <p class="lede">An end-to-end, single-cell analysis of the tumour immune microenvironment in a public Xenium tissue section,
-      with every key finding tested against technical artefacts. It is built three ways (Python notebooks, an independent
-      R / Bioconductor replication and a reproducible Snakemake workflow), all sharing one tested Python package,
-      <code>ist_analysis</code>.</p>
-    <div class="actions">
-      <a class="btn primary" href="https://vitessce.io/#?url=https://hossainms.github.io/xenium-human-lung-cancer-ffpe/viewer/config.json">Explore the cells</a>
-      <a class="btn" href="#notebooks">Read the notebooks</a>
-      <a class="btn" href="report.html">Pipeline report</a>
-      <a class="btn" href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe">Code on GitHub</a>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Imaging-based spatial transcriptomics &middot; 10x Genomics Xenium &middot; FFPE lung
+        adenocarcinoma</p>
+      <h1>Mapping the Immune Landscape of Lung Cancer with Xenium Spatial Transcriptomics</h1>
+      <p class="subtitle">Where are immune cells located within a lung tumour, and which findings hold up under critical
+        evaluation?</p>
+      <p class="byline"><strong>MD Shakhaowat Hossain</strong> &middot; PhD Candidate, Tulane University School of
+        Medicine</p>
+      <p class="lede">An end-to-end, single-cell analysis of the tumour immune microenvironment in a public Xenium
+        tissue section,
+        with every key finding tested against technical artefacts. It is built three ways (Python notebooks, an
+        independent
+        R / Bioconductor replication and a reproducible Snakemake workflow), all sharing one tested Python package,
+        <code>ist_analysis</code>.
+      </p>
+      <div class="actions">
+        <a class="btn primary"
+          href="https://vitessce.io/#?url=https://hossainms.github.io/xenium-human-lung-cancer-ffpe/viewer/config.json">Explore
+          the cells</a>
+        <a class="btn" href="#notebooks">Read the notebooks</a>
+        <a class="btn" href="report.html">Pipeline report</a>
+        <a class="btn" href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe">Code on GitHub</a>
+      </div>
+      <dl class="stats">
+        <div>
+          <dt>154,394</dt>
+          <dd>cells after QC</dd>
+        </div>
+        <div>
+          <dt>377</dt>
+          <dd>genes in the panel</dd>
+        </div>
+        <div>
+          <dt>33</dt>
+          <dd>annotated cell types</dd>
+        </div>
+        <div>
+          <dt>6</dt>
+          <dd>TLS-like aggregates</dd>
+        </div>
+      </dl>
     </div>
-    <dl class="stats">
-      <div><dt>154,394</dt><dd>cells after QC</dd></div>
-      <div><dt>377</dt><dd>genes in the panel</dd></div>
-      <div><dt>33</dt><dd>annotated cell types</dd></div>
-      <div><dt>6</dt><dd>TLS-like aggregates</dd></div>
-    </dl>
-  </div>
-</header>
+  </header>
 
-<main class="wrap">
+  <main class="wrap">
 
-<section id="overview">
-  <figure class="wide"><img src="images/overview_figure.jpg" alt="Overview figure: cell lineages, spatial domains, segmentation comparison, neighbourhood graph and a tertiary lymphoid structure on H&amp;E" loading="lazy">
-    <figcaption><strong>Figure 1. Spatial organisation of a lung adenocarcinoma section and the main analysis steps.</strong> <strong>a</strong>, Cell lineages of 139,129 high-confidence cells. Boxes indicate the regions shown in c-e. Scale bar, 1 mm. <strong>b</strong>, Spatial domains identified with CellCharter. Scale bar, 1 mm. <strong>c</strong>, Cell segmentation at a tumour-T cell interface (120 x 120 µm; the window where tumour and T-cell transcripts meet most densely), shown on DAPI for the vendor (10x, left) and Proseg (right) segmentations. Magenta outlines mark T cells that the method assigned tumour transcripts (EPCAM, MALL): 23 of 159 with 10x vs. 1 of 157 with Proseg; across the section, 18.8% vs. 1.5% of T / NK cells. Proseg cells inherit the lineage of the matching 10x cell. Scale bar, 20 µm. <strong>d</strong>, Delaunay spatial neighbourhood graph (edges ≤ 30 µm) at a tumour-stroma-immune border (150 x 150 µm). Scale bar, 50 µm. <strong>e</strong>, Tertiary lymphoid structure TLS1 on the matched H&amp;E (160 x 160 µm), with Xenium cell centroids coloured by lineage. Scale bar, 50 µm. Lineage colours are shared across a and c-e.</figcaption></figure>
-</section>
+    <section id="overview">
+      <figure class="wide"><img src="images/overview_figure.jpg"
+          alt="Overview figure: cell lineages, spatial domains, segmentation comparison, neighbourhood graph and a tertiary lymphoid structure on H&amp;E"
+          loading="lazy">
+        <figcaption><strong>Figure 1. Spatial organisation of a lung adenocarcinoma section and the main analysis
+            steps.</strong> <strong>a</strong>, Cell lineages of 139,129 high-confidence cells. Boxes indicate the
+          regions shown in c-e. Scale bar, 1 mm. <strong>b</strong>, Spatial domains identified with CellCharter. Scale
+          bar, 1 mm. <strong>c</strong>, Cell segmentation at a tumour-T cell interface (120 x 120 µm; the window where
+          tumour and T-cell transcripts meet most densely), shown on DAPI for the vendor (10x, left) and Proseg (right)
+          segmentations. Magenta outlines mark T cells that the method assigned tumour transcripts (EPCAM, MALL): 23 of
+          159 with 10x vs. 1 of 157 with Proseg; across the section, 18.8% vs. 1.5% of T / NK cells. Proseg cells
+          inherit the lineage of the matching 10x cell. Scale bar, 20 µm. <strong>d</strong>, Delaunay spatial
+          neighbourhood graph (edges ≤ 30 µm) at a tumour-stroma-immune border (150 x 150 µm). Scale bar, 50 µm.
+          <strong>e</strong>, Tertiary lymphoid structure TLS1 on the matched H&amp;E (160 x 160 µm), with Xenium cell
+          centroids coloured by lineage. Scale bar, 50 µm. Lineage colours are shared across a and c-e.</figcaption>
+      </figure>
+    </section>
 
-<section id="findings">
-  <h2>Key findings</h2>
+    <section id="findings">
+      <h2>Key findings</h2>
 
-  <article class="finding">
-    <div class="text">
-      <span class="num">1</span>
-      <h3>Predominantly CD8-excluded tumour regions</h3>
-      <p>Only 12% of CD8+ T cells were located within 15 &micro;m of a tumour cell, compared with 34% of non-tumour cells
-        overall. Macrophages, dendritic cells and fibroblasts were prominent along the tumour boundary.</p>
-      <p>At the 400 &micro;m tile scale, 65% of tumour-containing tiles were classified as <em>immune-excluded</em>, 26% as
-        <em>immune deserts</em> and 9% as <em>inflamed</em>. Python and R analyses produced identical tile classifications.</p>
-      <p>Together, these results suggest a predominantly CD8-excluded spatial pattern in this tissue section, with
-        relatively few inflamed regions.</p>
+      <article class="finding">
+        <div class="text">
+          <span class="num">1</span>
+          <h3>Predominantly CD8-excluded tumour regions</h3>
+          <p>Only 12% of CD8+ T cells were located within 15 &micro;m of a tumour cell, compared with 34% of non-tumour
+            cells
+            overall. Macrophages, dendritic cells and fibroblasts were prominent along the tumour boundary.</p>
+          <p>At the 400 &micro;m tile scale, 65% of tumour-containing tiles were classified as <em>immune-excluded</em>,
+            26% as
+            <em>immune deserts</em> and 9% as <em>inflamed</em>. Python and R analyses produced identical tile
+            classifications.
+          </p>
+          <p>Together, these results suggest a predominantly CD8-excluded spatial pattern in this tissue section, with
+            relatively few inflamed regions.</p>
+        </div>
+        <figure><img src="images/immune_phenotypes.png" alt="Map of immune phenotypes per 400 micrometre tumour tile"
+            loading="lazy"></figure>
+      </article>
+
+      <article class="finding">
+        <div class="text">
+          <span class="num">2</span>
+          <h3>Six TLS-like aggregates show organised lymphoid architecture</h3>
+          <p>Six tertiary lymphoid structure (TLS)-like aggregates were identified across the tissue section. These
+            aggregates featured B-cell-rich cores surrounded by T-cell rims; the largest (TLS1) showed the corresponding
+            lymphoid architecture on the matched H&amp;E.</p>
+          <p>The proportion of CCR7-expressing CD8+ T cells was 36% within the aggregates and 11% at the tumour border
+            (within 15 &micro;m of tumour cells). Contacts between CCL19-expressing and CCR7-expressing cells were
+            enriched 2.4-fold relative to a spatial permutation null that shuffles expression within cell types, and the
+            CCR7 difference persisted after cell re-segmentation.</p>
+          <p>Together, these results are consistent with organised lymphoid niches in this section, with distinct CD8+
+            T-cell states near the aggregates and at the tumour border.</p>
+        </div>
+        <figure><img src="images/tls_lineage_map.jpg" alt="Cell lineage map with the TLS-like aggregates marked"
+            loading="lazy">
+          <img src="images/he_tls_window.jpg" alt="The largest TLS-like aggregate on the H&amp;E image" loading="lazy">
+        </figure>
+      </article>
+
+      <article class="finding">
+        <div class="text">
+          <span class="num">3</span>
+          <h3>FCGR1A+ macrophage expression varies by spatial domain</h3>
+          <p>Paired pseudobulk DESeq2 analysis of BANKSY- and CellCharter-defined domains found higher TREM2, CTSK and
+            LPL expression in stromal FCGR1A+ macrophages, and higher MARCO, MCEMP1 and CXCL2 expression in
+            tumour-adjacent macrophages.</p>
+          <p>Of 60 initially significant genes, 42 were excluded because their signals were attributable to
+            neighbouring-cell transcripts. The remaining differences persisted with re-segmented counts.</p>
+          <p>These findings indicate location-associated expression differences within this section. However, the 1 mm
+            tissue blocks are not independent biological replicates, making the p-values optimistic; functional
+            consequences were not tested.</p>
+        </div>
+        <figure><img src="images/spatial_domains.jpg" alt="Spatial domains from BANKSY and CellCharter" loading="lazy">
+        </figure>
+      </article>
+
+      <article class="finding">
+        <div class="text">
+          <span class="num">4</span>
+          <h3>Main findings persist after cell re-segmentation</h3>
+          <p>Proseg re-segmentation reduced the proportion of T / NK cells containing neighbouring epithelial
+            transcripts from 19% to 1.5%. CD8 exclusion persisted (12% versus 34% within 15 &micro;m of tumour cells),
+            all six TLS-like aggregates were re-identified within 3&ndash;9 &micro;m of their original locations, and
+            CCR7 expression remained higher in CD8+ T cells within the aggregates than at the tumour border (25% versus
+            9%).</p>
+          <p>Lineage annotations agreed with the Lung Cancer Atlas (LuCA; 892,000 cells) for 92% of high-confidence
+            cells.</p>
+          <p>These checks support robustness to segmentation spillover within this tissue section; they do not establish
+            consistency across patients.</p>
+        </div>
+        <figure><img src="images/resegmentation_robustness.jpg"
+            alt="Left: percentage of cells carrying markers of another lineage under the 10x and Proseg segmentations. Right: CCR7 and the EPCAM spillover control in CD8+ T cells by tissue compartment under both segmentations"
+            loading="lazy"></figure>
+      </article>
+    </section>
+
+    <section id="he">
+      <article class="finding plain">
+        <div class="text">
+          <span class="num">5</span>
+          <h3>H&amp;E features predict lineage better than immune states</h3>
+      <p>Features from Phikon-v2, a pathology foundation model, extracted at each cell’s position on the matched H&amp;E predicted cell lineage with 57% balanced accuracy in spatially held-out tissue blocks, compared with 14% chance accuracy and 45% for a Xenium-neighbour-based control. Cell-type prediction reached 34% balanced accuracy, compared with 4% chance accuracy.</p>
+      <p>Recognition was highest for epithelial cells (90%), smooth muscle cells and alveolar macrophages (71% each), but low for regulatory T cells (13%) and CXCL9+ macrophages (7%). Regional gene expression was better predicted than single-cell expression (median r = 0.52 versus 0.17); checkpoint transcripts PD-1, PD-L1 and LAG-3 showed little predictive signal (r &le; 0.04).</p>
+      <p>These findings describe the performance of one model’s H&amp;E features in this tissue section, not the general limits of histology.</p>
     </div>
-    <figure><img src="images/immune_phenotypes.png" alt="Map of immune phenotypes per 400 micrometre tumour tile" loading="lazy"></figure>
-  </article>
+      </article>
+    </section>
 
-  <article class="finding">
-    <div class="text">
-      <span class="num">2</span>
-      <h3>Six TLS-like aggregates show organised lymphoid architecture</h3>
-      <p>Six tertiary lymphoid structure (TLS)-like aggregates were identified across the tissue section. These aggregates featured B-cell-rich cores surrounded by T-cell rims; the largest (TLS1) showed the corresponding lymphoid architecture on the matched H&amp;E.</p>
-      <p>The proportion of CCR7-expressing CD8+ T cells was 36% within the aggregates and 11% at the tumour border (within 15 &micro;m of tumour cells). Contacts between CCL19-expressing and CCR7-expressing cells were enriched 2.4-fold relative to a spatial permutation null that shuffles expression within cell types, and the CCR7 difference persisted after cell re-segmentation.</p>
-      <p>Together, these results are consistent with organised lymphoid niches in this section, with distinct CD8+ T-cell states near the aggregates and at the tumour border.</p>
+    <section id="explore">
+      <h2>Explore</h2>
+      <div class="cards">
+        <a class="card"
+          href="https://vitessce.io/#?url=https://hossainms.github.io/xenium-human-lung-cancer-ffpe/viewer/config.json">
+          <h3>Interactive cell viewer</h3>
+          <p>139,129 high-confidence cells in tissue and UMAP space. Colour by cell type, niche, spatial domain, TLS or
+            CD8 compartment, or by any of the 377 genes. Opens in Vitessce; best on a desktop
+            browser (about 40 MB of data).</p>
+        </a>
+        <a class="card" href="report.html">
+          <h3>Pipeline report</h3>
+          <p>The Snakemake report: workflow graph, runtimes, and the key figures and tables of every step, each with the
+            code
+            and parameters that produced it.</p>
+        </a>
+        <a class="card" href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe">
+          <h3>Code</h3>
+          <p>The <code>ist_analysis</code> package, Snakemake workflow, configuration, unit tests and CI. Code under
+            MIT,
+            text and figures under CC BY 4.0.</p>
+        </a>
+      </div>
+    </section>
+
+    <section id="notebooks">
+      <h2>Notebooks</h2>
+      <p>Rendered with their saved outputs; nothing to install.</p>
+      <table class="list">
+        <tbody>
+          <tr>
+            <td><a href="notebooks/01_core_python.html">01 &middot; Core analysis (Python)</a></td>
+            <td>Steps 1-10: download, QC, clustering, annotation, spatial statistics, H&amp;E, tumour immune
+              microenvironment, squidpy</td>
+          </tr>
+          <tr>
+            <td><a href="notebooks/01_core_R.html">01 &middot; Core analysis (R)</a></td>
+            <td>Independent replication with Seurat, SpatialExperiment, imcRtools, Banksy, CellChat and spatstat,
+              cross-checked against Python</td>
+          </tr>
+          <tr>
+            <td><a href="notebooks/02_resegmentation_proseg.html">02 &middot; Re-segmentation</a></td>
+            <td>Proseg re-segmentation, spillover before and after, and whether each finding survives</td>
+          </tr>
+          <tr>
+            <td><a href="notebooks/03_reference_mapping.html">03 &middot; Reference mapping</a></td>
+            <td>Cell types validated against the Lung Cancer Atlas, with a held-out-donor accuracy ceiling</td>
+          </tr>
+          <tr>
+            <td><a href="notebooks/04_spatial_domains.html">04 &middot; Spatial domains</a></td>
+            <td>BANKSY and CellCharter domains, and location-dependent macrophage states by pseudobulk DESeq2</td>
+          </tr>
+          <tr>
+            <td><a href="notebooks/05_he_foundation_model.html">05 &middot; H&amp;E foundation model</a></td>
+            <td>What a pathology foundation model (Phikon-v2) sees in the H&amp;E: cell types, genes and tissue domains
+              from morphology alone</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="pipeline">
+      <h2>One implementation, three ways to run it</h2>
+      <p>All analysis logic lives in <code>ist_analysis</code>, a package for imaging-based spatial transcriptomics
+        (Xenium, MERSCOPE, CosMx). Platform-specific code sits in a single adapter,
+        <code>ist_analysis/io/xenium.py</code>;
+        everything else works on a standard AnnData. The notebooks and the Snakemake scripts call the same functions,
+        and
+        unit tests on synthetic data run on every push.</p>
+      <figure class="wide"><img src="images/rulegraph.png" alt="Snakemake rule graph of the pipeline" loading="lazy">
+        <figcaption>Snakemake rule graph: the core chain from download to spatial analysis, with re-segmentation, atlas
+          mapping and spatial domains branching off.</figcaption>
+      </figure>
+    </section>
+
+    <section id="cite">
+      <h2>How to cite</h2>
+      <p>Design, analysis, code and interpretation by MD Shakhaowat Hossain. If you use this analysis or its code,
+        please cite:</p>
+      <p class="citation">Hossain, M. S. (2026). <em>Xenium human lung cancer (FFPE): Spatial analysis of the tumour
+          immune
+          microenvironment</em> (Version 1.1.0) [Computer software]. GitHub.
+        https://github.com/hossainms/xenium-human-lung-cancer-ffpe</p>
+      <p>Citation metadata is in <a
+          href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe/blob/main/CITATION.cff">CITATION.cff</a>
+        (GitHub's "Cite this repository" button), and please also cite the datasets and methods below.</p>
+      <p><strong>Using this work?</strong> I would be glad to hear how you are applying the analysis or code, and happy
+        to answer
+        questions or discuss related ideas. Feel free to reach out at <a
+          href="mailto:shakhaowatdu@gmail.com">shakhaowatdu@gmail.com</a>.</p>
+    </section>
+
+    <section id="data">
+      <h2>Data and attribution</h2>
+      <p>Xenium Human Lung Cancer FFPE (Xenium v1, Human Multi-Tissue and Cancer panel), 10x Genomics public datasets,
+        CC BY 4.0. Lung Cancer Atlas (LuCA) core atlas, Salcher et al., <em>Cancer Cell</em> 2022, via CELLxGENE, CC BY
+        4.0.
+        Methods: Proseg, BANKSY, CellCharter, CellTypist, squidpy, scanpy, spatialdata, PyDESeq2; in R, Seurat,
+        SpatialExperiment, imcRtools, Banksy, SingleR, CellChat and spatstat.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>&copy; 2026 MD Shakhaowat Hossain &middot; PhD Candidate, Tulane University School of Medicine</p>
+      <p>Code MIT &middot; text and figures CC BY 4.0 &middot;
+        <a
+          href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe">github.com/hossainms/xenium-human-lung-cancer-ffpe</a>
+      </p>
     </div>
-    <figure><img src="images/tls_lineage_map.jpg" alt="Cell lineage map with the TLS-like aggregates marked" loading="lazy">
-      <img src="images/he_tls_window.jpg" alt="The largest TLS-like aggregate on the H&amp;E image" loading="lazy"></figure>
-  </article>
-
-  <article class="finding">
-    <div class="text">
-      <span class="num">3</span>
-      <h3>FCGR1A+ macrophage expression varies by spatial domain</h3>
-      <p>Paired pseudobulk DESeq2 analysis of BANKSY- and CellCharter-defined domains found higher TREM2, CTSK and LPL expression in stromal FCGR1A+ macrophages, and higher MARCO, MCEMP1 and CXCL2 expression in tumour-adjacent macrophages.</p>
-      <p>Of 60 initially significant genes, 42 were excluded because their signals were attributable to neighbouring-cell transcripts. The remaining differences persisted with re-segmented counts.</p>
-      <p>These findings indicate location-associated expression differences within this section. However, the 1 mm tissue blocks are not independent biological replicates, making the p-values optimistic; functional consequences were not tested.</p>
-    </div>
-    <figure><img src="images/spatial_domains.jpg" alt="Spatial domains from BANKSY and CellCharter" loading="lazy"></figure>
-  </article>
-
-  <article class="finding">
-    <div class="text">
-      <span class="num">4</span>
-      <h3>Main findings persist after cell re-segmentation</h3>
-      <p>Proseg re-segmentation reduced the proportion of T / NK cells containing neighbouring epithelial transcripts from 19% to 1.5%. CD8 exclusion persisted (12% versus 34% within 15 &micro;m of tumour cells), all six TLS-like aggregates were re-identified within 3&ndash;9 &micro;m of their original locations, and CCR7 expression remained higher in CD8+ T cells within the aggregates than at the tumour border (25% versus 9%).</p>
-      <p>Lineage annotations agreed with the Lung Cancer Atlas (LuCA; 892,000 cells) for 92% of high-confidence cells.</p>
-      <p>These checks support robustness to segmentation spillover within this tissue section; they do not establish consistency across patients.</p>
-    </div>
-    <figure><img src="images/resegmentation_robustness.jpg" alt="Left: percentage of cells carrying markers of another lineage under the 10x and Proseg segmentations. Right: CCR7 and the EPCAM spillover control in CD8+ T cells by tissue compartment under both segmentations" loading="lazy"></figure>
-  </article>
-</section>
-
-<section id="he">
-  <article class="finding plain">
-    <div class="text">
-      <span class="num">5</span>
-      <h3>H&amp;E morphology captures cell lineage but not functional immune states</h3>
-      <p>Embeddings from a pathology foundation model (Phikon-v2), read at each cell's position on the matched H&amp;E, predicted cell lineage with 57% balanced accuracy on spatially held-out tissue blocks (chance, 14%; control based on each cell's Xenium neighbours, 45%) and cell type with 34% (chance, 4%). Recognition was highest for epithelium (90%), smooth muscle and alveolar macrophages (71%), and low for regulatory T cells (13%) and CXCL9+ macrophages (7%). Morphology predicted regional gene expression (median r = 0.52) better than single-cell expression (median r = 0.17), and checkpoint transcripts (PD-1, PD-L1, LAG-3) were not predictable (r &le; 0.04).</p>
-      <p>These results describe what one foundation model's H&amp;E features capture in this section; they do not establish the limits of histology in general.</p>
-    </div>
-  </article>
-</section>
-
-<section id="explore">
-  <h2>Explore</h2>
-  <div class="cards">
-    <a class="card" href="https://vitessce.io/#?url=https://hossainms.github.io/xenium-human-lung-cancer-ffpe/viewer/config.json">
-      <h3>Interactive cell viewer</h3>
-      <p>139,129 high-confidence cells in tissue and UMAP space. Colour by cell type, niche, spatial domain, TLS or
-        CD8 compartment, or by any of the 377 genes. Opens in Vitessce; best on a desktop
-        browser (about 40 MB of data).</p>
-    </a>
-    <a class="card" href="report.html">
-      <h3>Pipeline report</h3>
-      <p>The Snakemake report: workflow graph, runtimes, and the key figures and tables of every step, each with the code
-        and parameters that produced it.</p>
-    </a>
-    <a class="card" href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe">
-      <h3>Code</h3>
-      <p>The <code>ist_analysis</code> package, Snakemake workflow, configuration, unit tests and CI. Code under MIT,
-        text and figures under CC BY 4.0.</p>
-    </a>
-  </div>
-</section>
-
-<section id="notebooks">
-  <h2>Notebooks</h2>
-  <p>Rendered with their saved outputs; nothing to install.</p>
-  <table class="list">
-    <tbody>
-      <tr><td><a href="notebooks/01_core_python.html">01 &middot; Core analysis (Python)</a></td>
-        <td>Steps 1-10: download, QC, clustering, annotation, spatial statistics, H&amp;E, tumour immune microenvironment, squidpy</td></tr>
-      <tr><td><a href="notebooks/01_core_R.html">01 &middot; Core analysis (R)</a></td>
-        <td>Independent replication with Seurat, SpatialExperiment, imcRtools, Banksy, CellChat and spatstat, cross-checked against Python</td></tr>
-      <tr><td><a href="notebooks/02_resegmentation_proseg.html">02 &middot; Re-segmentation</a></td>
-        <td>Proseg re-segmentation, spillover before and after, and whether each finding survives</td></tr>
-      <tr><td><a href="notebooks/03_reference_mapping.html">03 &middot; Reference mapping</a></td>
-        <td>Cell types validated against the Lung Cancer Atlas, with a held-out-donor accuracy ceiling</td></tr>
-      <tr><td><a href="notebooks/04_spatial_domains.html">04 &middot; Spatial domains</a></td>
-        <td>BANKSY and CellCharter domains, and location-dependent macrophage states by pseudobulk DESeq2</td></tr>
-      <tr><td><a href="notebooks/05_he_foundation_model.html">05 &middot; H&amp;E foundation model</a></td>
-        <td>What a pathology foundation model (Phikon-v2) sees in the H&amp;E: cell types, genes and tissue domains from morphology alone</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<section id="pipeline">
-  <h2>One implementation, three ways to run it</h2>
-  <p>All analysis logic lives in <code>ist_analysis</code>, a package for imaging-based spatial transcriptomics
-    (Xenium, MERSCOPE, CosMx). Platform-specific code sits in a single adapter, <code>ist_analysis/io/xenium.py</code>;
-    everything else works on a standard AnnData. The notebooks and the Snakemake scripts call the same functions, and
-    unit tests on synthetic data run on every push.</p>
-  <figure class="wide"><img src="images/rulegraph.png" alt="Snakemake rule graph of the pipeline" loading="lazy">
-    <figcaption>Snakemake rule graph: the core chain from download to spatial analysis, with re-segmentation, atlas
-      mapping and spatial domains branching off.</figcaption></figure>
-</section>
-
-<section id="cite">
-  <h2>How to cite</h2>
-  <p>Design, analysis, code and interpretation by MD Shakhaowat Hossain. If you use this analysis or its code, please cite:</p>
-  <p class="citation">Hossain, M. S. (2026). <em>Xenium human lung cancer (FFPE): Spatial analysis of the tumour immune
-    microenvironment</em> (Version 1.1.0) [Computer software]. GitHub. https://github.com/hossainms/xenium-human-lung-cancer-ffpe</p>
-  <p>Citation metadata is in <a href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe/blob/main/CITATION.cff">CITATION.cff</a>
-    (GitHub's "Cite this repository" button), and please also cite the datasets and methods below.</p>
-  <p><strong>Using this work?</strong> I would be glad to hear how you are applying the analysis or code, and happy to answer
-    questions or discuss related ideas. Feel free to reach out at <a href="mailto:shakhaowatdu@gmail.com">shakhaowatdu@gmail.com</a>.</p>
-</section>
-
-<section id="data">
-  <h2>Data and attribution</h2>
-  <p>Xenium Human Lung Cancer FFPE (Xenium v1, Human Multi-Tissue and Cancer panel), 10x Genomics public datasets,
-    CC BY 4.0. Lung Cancer Atlas (LuCA) core atlas, Salcher et al., <em>Cancer Cell</em> 2022, via CELLxGENE, CC BY 4.0.
-    Methods: Proseg, BANKSY, CellCharter, CellTypist, squidpy, scanpy, spatialdata, PyDESeq2; in R, Seurat,
-    SpatialExperiment, imcRtools, Banksy, SingleR, CellChat and spatstat.</p>
-</section>
-
-</main>
-
-<footer>
-  <div class="wrap">
-    <p>&copy; 2026 MD Shakhaowat Hossain &middot; PhD Candidate, Tulane University School of Medicine</p>
-    <p>Code MIT &middot; text and figures CC BY 4.0 &middot;
-      <a href="https://github.com/hossainms/xenium-human-lung-cancer-ffpe">github.com/hossainms/xenium-human-lung-cancer-ffpe</a></p>
-  </div>
-</footer>
+  </footer>
 
 </body>
+
 </html>

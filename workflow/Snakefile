@@ -74,8 +74,8 @@ rule qc:
         flag("download"),
     output:
         h5ad("qc"),
-        fig("step04_qc_distributions", "1. Quality control"),
-        tab("step04_qc_rules", "1. Quality control"),
+        fig("step04_qc_distributions", "01. Quality control"),
+        tab("step04_qc_rules", "01. Quality control"),
     log:
         f"{LOG}/qc.log",
     shell:
@@ -87,8 +87,8 @@ rule cluster:
         h5ad("qc"),
     output:
         h5ad("clustered"),
-        fig("step05_clusters", "2. Clustering and annotation"),
-        tab("step05_clusters", "2. Clustering and annotation", "step05_clusters_table"),
+        fig("step05_clusters", "02. Clustering and annotation"),
+        tab("step05_clusters", "02. Clustering and annotation", "step05_clusters_table"),
     log:
         f"{LOG}/cluster.log",
     threads: 8
@@ -102,8 +102,8 @@ rule annotate:
         labels="config/annotation.yaml",
     output:
         h5ad("annotated"),
-        fig("step06_lineages", "2. Clustering and annotation"),
-        tab("step06_cell_types", "2. Clustering and annotation"),
+        fig("step06_lineages", "02. Clustering and annotation"),
+        tab("step06_cell_types", "02. Clustering and annotation"),
     log:
         f"{LOG}/annotate.log",
     shell:
@@ -115,10 +115,10 @@ rule spatial:
         h5ad("annotated"),
     output:
         h5ad("spatial"),
-        fig("step07_nhood_enrichment_lineage", "3. Spatial organisation"),
-        fig("step07_nhood_enrichment_time_type", "3. Spatial organisation"),
-        fig("step07_tls", "3. Spatial organisation"),
-        tab("step07_infiltration", "3. Spatial organisation"),
+        fig("step07_nhood_enrichment_lineage", "03. Spatial organisation"),
+        fig("step07_nhood_enrichment_time_type", "03. Spatial organisation"),
+        fig("step07_tls", "03. Spatial organisation"),
+        tab("step07_infiltration", "03. Spatial organisation"),
     log:
         f"{LOG}/spatial.log",
     threads: 4
@@ -131,8 +131,8 @@ rule he_features:
         h5ad("spatial"),
     output:
         h5ad("he_features"),
-        fig("step08_alignment", "4. H&E"),
-        fig("step08_histology_windows", "4. H&E"),
+        fig("step08_alignment", "04. H&E"),
+        fig("step08_histology_windows", "04. H&E"),
     log:
         f"{LOG}/he_features.log",
     resources:
@@ -146,9 +146,9 @@ rule time_analysis:
         h5ad("spatial"),
     output:
         data=h5ad("time"),
-        contacts=tab("step09_ligand_receptor_contacts", "5. Tumour immune microenvironment"),
-        phenotypes=fig("step09_immune_phenotypes", "5. Tumour immune microenvironment"),
-        checkpoints=tab("step09_checkpoint_positivity", "5. Tumour immune microenvironment"),
+        contacts=tab("step09_ligand_receptor_contacts", "05. Tumour immune microenvironment"),
+        phenotypes=fig("step09_immune_phenotypes", "05. Tumour immune microenvironment"),
+        checkpoints=tab("step09_checkpoint_positivity", "05. Tumour immune microenvironment"),
     log:
         f"{LOG}/time_analysis.log",
     shell:
@@ -162,8 +162,8 @@ rule spatial_stats:
         he=h5ad("he_features"),      # not read here; makes `core` include Step 8
     output:
         flag("spatial_stats"),
-        fig("step10_co_occurrence", "6. Spatial statistics"),
-        tab("step10_ligrec_vs_contact_test", "6. Spatial statistics"),
+        fig("step10_co_occurrence", "06. Spatial statistics"),
+        tab("step10_ligrec_vs_contact_test", "06. Spatial statistics"),
     log:
         f"{LOG}/spatial_stats.log",
     threads: 4
@@ -193,7 +193,7 @@ rule proseg_export:
         annotated=h5ad("annotated"),
     output:
         h5ad("proseg_counts"),
-        tab("nb02_paired_spillover", "7. Re-segmentation (Proseg)"),
+        tab("nb02_paired_spillover", "07. Re-segmentation (Proseg)"),
     log:
         f"{LOG}/proseg_export.log",
     shell:
@@ -208,7 +208,7 @@ rule proseg_robustness:
         time=h5ad("time"),
     output:
         flag("proseg_robustness"),
-        tab("nb02_verdict", "7. Re-segmentation (Proseg)"),
+        tab("nb02_verdict", "07. Re-segmentation (Proseg)"),
     log:
         f"{LOG}/proseg_robustness.log",
     shell:
@@ -233,7 +233,7 @@ rule reference_mapping:
         proseg=h5ad("proseg_counts"),
     output:
         flag("reference_mapping"),
-        tab("nb03_agreement_by_cell_type", "8. Reference atlas"),
+        tab("nb03_agreement_by_cell_type", "08. Reference atlas"),
     log:
         f"{LOG}/reference_mapping.log",
     resources:
@@ -249,10 +249,10 @@ rule spatial_domains:
         proseg=h5ad("proseg_counts"),
     output:
         flag("spatial_domains"),
-        fig("nb04_domain_maps", "9. Spatial domains"),
-        tab("nb04_method_agreement", "9. Spatial domains"),
-        tab("nb04_pseudobulk_fcgr1a_tumour-myeloid_vs_stroma", "9. Spatial domains"),
-        tab("nb04_pseudobulk_cd163_lymphoid_vs_stroma", "9. Spatial domains"),
+        fig("nb04_domain_maps", "09. Spatial domains"),
+        tab("nb04_method_agreement", "09. Spatial domains"),
+        tab("nb04_pseudobulk_fcgr1a_tumour-myeloid_vs_stroma", "09. Spatial domains"),
+        tab("nb04_pseudobulk_cd163_lymphoid_vs_stroma", "09. Spatial domains"),
     log:
         f"{LOG}/spatial_domains.log",
     threads: 8

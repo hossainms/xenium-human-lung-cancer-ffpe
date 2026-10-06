@@ -34,7 +34,8 @@ plt.rcParams.update({"font.family": ["Arial", "Helvetica", "DejaVu Sans"], "font
                      "axes.titleweight": "bold", "axes.titlelocation": "left", "axes.linewidth": 0.6})
 LIN = xu.LINEAGE_COLORS
 SEG_WINDOW = (4260.0, 1980.0, 120.0)      # notebook 02's window: the 120 um tile where tumour and T-cell transcripts meet most densely
-GRAPH_WINDOW = (3375.0, 2025.0, 150.0)    # most lineage-diverse tumour / stroma / immune border window
+GRAPH_WINDOW = (5925.0, 1875.0, 150.0)    # most lineage-diverse tumour / stroma / immune 150 um tile between windows c and e,
+                                          # so the boxes on panel a read c, d, e from left to right
 TLS_SIDE = 160.0
 TUMOUR_GENES, T_GENES = ["EPCAM", "MALL"], ["CD3E", "TRAC"]
 # Transcript dots on the dark DAPI image: lighter tints of the lineage colours (tumour = blue, T cell = orange)

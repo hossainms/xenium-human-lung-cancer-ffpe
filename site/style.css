@@ -112,3 +112,10 @@ footer p { margin: 4px 0; }
   .list tr { display: block; border-top: 1px solid var(--line); padding: 10px 0; }
   .list td:first-child { white-space: normal; }
 }
+
+/* share row: plain links, no third-party scripts */
+.share-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 18px; }
+.share-label { color: var(--muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-right: 4px; }
+.share-pill { font: 500 0.82rem Inter, system-ui, sans-serif; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--text); text-decoration: none; cursor: pointer; }
+.share-pill:hover { border-color: var(--accent); }

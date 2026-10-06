@@ -265,7 +265,29 @@
         to answer
         questions or discuss related ideas. Feel free to reach out at <a
           href="mailto:shakhaowatdu@gmail.com">shakhaowatdu@gmail.com</a>.</p>
-    </section>
+      <div class="share-row" data-url="https://hossainms.github.io/xenium-human-lung-cancer-ffpe/" data-title="Mapping the Immune Landscape of Lung Cancer with Xenium Spatial Transcriptomics">
+    <span class="share-label">Share</span>
+    <button type="button" class="share-pill" data-native-share hidden>Share&hellip;</button>
+    <a class="share-pill" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fhossainms.github.io%2Fxenium-human-lung-cancer-ffpe%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a class="share-pill" href="https://bsky.app/intent/compose?text=Mapping%20the%20Immune%20Landscape%20of%20Lung%20Cancer%20with%20Xenium%20Spatial%20Transcriptomics%20https%3A%2F%2Fhossainms.github.io%2Fxenium-human-lung-cancer-ffpe%2F" target="_blank" rel="noopener noreferrer">Bluesky</a>
+    <a class="share-pill" href="https://x.com/intent/post?text=Mapping%20the%20Immune%20Landscape%20of%20Lung%20Cancer%20with%20Xenium%20Spatial%20Transcriptomics&amp;url=https%3A%2F%2Fhossainms.github.io%2Fxenium-human-lung-cancer-ffpe%2F" target="_blank" rel="noopener noreferrer">X</a>
+    <a class="share-pill" href="mailto:?subject=Mapping%20the%20Immune%20Landscape%20of%20Lung%20Cancer%20with%20Xenium%20Spatial%20Transcriptomics&amp;body=An%20end-to-end%2C%20single-cell%20analysis%20of%20the%20tumour%20immune%20microenvironment%20in%20a%20public%2010x%20Genomics%20Xenium%20lung%20adenocarcinoma%20section.%0A%0Ahttps%3A%2F%2Fhossainms.github.io%2Fxenium-human-lung-cancer-ffpe%2F">Email</a>
+    <button type="button" class="share-pill" data-copy-link>Copy link</button>
+  </div>
+  <script>
+    document.querySelectorAll(".share-row").forEach(function (row) {
+      var url = row.dataset.url, title = row.dataset.title;
+      var nat = row.querySelector("[data-native-share]");
+      if (nat && navigator.share) { nat.hidden = false; nat.onclick = function () { navigator.share({ title: title, url: url }).catch(function () {}); }; }
+      var copy = row.querySelector("[data-copy-link]");
+      copy.onclick = function () {
+        (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(
+          function () { copy.textContent = "Link copied"; }, function () { copy.textContent = url; });
+        setTimeout(function () { copy.textContent = "Copy link"; }, 2500);
+      };
+    });
+  </script>
+</section>
 
     <section id="data">
       <h2>Data and attribution</h2>

@@ -72,10 +72,10 @@
   <article class="finding">
     <div class="text">
       <span class="num">2</span>
-      <h3>Six tertiary lymphoid structure (TLS)-like aggregates</h3>
-      <p>B-cell cores with a T-cell rim, confirmed on the matched H&amp;E. CD8 T cells lose the lymphoid-homing receptor
-        CCR7 on the way from TLS to tumour (36% to 11%), and CCL19 to CCR7 cell contacts are enriched 2.4-fold in a
-        spatial permutation test.</p>
+      <h3>Tertiary lymphoid structure-like aggregates and a CD8+ T-cell gradient</h3>
+      <p>Six aggregates with a B-cell core and a T-cell rim were identified by density-based clustering of B cells, and their organisation was consistent with tertiary lymphoid structures on the matched H&amp;E.</p>
+      <p>CCR7, a lymphoid-homing receptor, was detected in 36% of CD8+ T cells within these aggregates but in 11% of those in contact with tumour cells. CCL19-CCR7 cell contacts were 2.4-fold more frequent than expected under a within-cell-type permutation null, and the CCR7 gradient persisted after cell re-segmentation.</p>
+      <p>Together, these results are consistent with organised lymphoid niches in this section, with CD8+ T-cell states differing between the aggregates and the tumour border.</p>
     </div>
     <figure><img src="images/tls_lineage_map.jpg" alt="Cell lineage map with the TLS-like aggregates marked" loading="lazy">
       <img src="images/he_tls_window.jpg" alt="The largest TLS-like aggregate on the H&amp;E image" loading="lazy"></figure>
@@ -84,9 +84,10 @@
   <article class="finding">
     <div class="text">
       <span class="num">3</span>
-      <h3>The same macrophage type changes state with location</h3>
-      <p>FCGR1A+ macrophages switch from a TREM2 / CTSK / LPL programme in stroma to MARCO / MCEMP1 / CXCL2 next to
-        tumour, in paired pseudobulk DESeq2 on spatial domains from BANKSY and CellCharter.</p>
+      <h3>Location-dependent macrophage programmes</h3>
+      <p>FCGR1A+ macrophages in stromal domains expressed higher TREM2, CTSK and LPL, whereas those in tumour-adjacent domains expressed higher MARCO, MCEMP1 and CXCL2 (paired pseudobulk DESeq2 between BANKSY and CellCharter domains, with 1 mm tissue blocks as replicates).</p>
+      <p>Of 60 genes that initially reached significance, 42 were attributable to transcripts from neighbouring cells and were excluded; the remaining differences were confirmed with the re-segmented counts.</p>
+      <p>Together, these results suggest that the same macrophage population adopts different transcriptional states depending on its location in this section.</p>
     </div>
     <figure><img src="images/spatial_domains.jpg" alt="Spatial domains from BANKSY and CellCharter" loading="lazy"></figure>
   </article>
@@ -94,12 +95,10 @@
   <article class="finding plain">
     <div class="text">
       <span class="num">4</span>
-      <h3>The critical look</h3>
-      <p>Segmentation spillover is the dominant artefact in imaging spatial data: 19% of T cells carried tumour
-        transcripts. Re-segmentation with Proseg reduces this to 1.5%, and every finding above was re-tested on the
-        cleaner cells (CD8 exclusion, all six TLS and the CCR7 gradient hold). 42 of 60 'differentially expressed'
-        macrophage genes were neighbouring-cell spillover and are filtered out. Cell types were validated against the
-        Lung Cancer Atlas (892k cells): 92% lineage agreement, against an 87% ceiling for this panel.</p>
+      <h3>Robustness to segmentation artefacts</h3>
+      <p>With the vendor segmentation, 19% of T / NK cells contained epithelial transcripts from neighbouring cells. Re-segmentation with Proseg reduced this to 1.5%, and CD8 exclusion, all six aggregates and the CCR7 gradient were reproduced on the re-segmented cells.</p>
+      <p>Cell-type annotations agreed with the Lung Cancer Atlas (LuCA; 892,000 cells) at the lineage level for 92% of high-confidence cells.</p>
+      <p>Together, these checks indicate that the main spatial findings are not driven by segmentation errors, although data from a single section cannot address variation between patients.</p>
     </div>
   </article>
 </section>
@@ -108,12 +107,10 @@
   <article class="finding plain">
     <div class="text">
       <span class="num">5</span>
-      <h3>What the H&amp;E can and cannot see</h3>
-      <p>A pathology foundation model (Phikon-v2) read at each cell's position on the matched H&amp;E predicts lineage at 57%
-        and cell type at 34% balanced accuracy on held-out tissue blocks (about 4x and 9x chance), above a control that knows
-        each cell's Xenium neighbours. Epithelium (90%), smooth muscle and alveolar macrophages (71%) are visible; functional
-        states such as Tregs and CXCL9+ macrophages are not. The H&amp;E predicts regional gene expression well (median r 0.52)
-        but a cell's own expression poorly (0.17), and checkpoint genes (PD-1, PD-L1, LAG-3) not at all.</p>
+      <h3>What the matched H&amp;E can and cannot reveal</h3>
+      <p>Embeddings from a pathology foundation model (Phikon-v2), read at each cell's position on the matched H&amp;E, predicted cell lineage with 57% balanced accuracy on spatially held-out tissue blocks (chance, 14%), above a control based on each cell's Xenium neighbours (45%). Epithelium (90%), smooth muscle and alveolar macrophages (71%) were readily recognised; functional states such as regulatory T cells and CXCL9+ macrophages were not.</p>
+      <p>Morphology predicted regional gene expression (median r = 0.52) much better than single-cell expression (median r = 0.17), and checkpoint transcripts (PD-1, PD-L1, LAG-3) were not predictable.</p>
+      <p>Together, these results suggest that routine histology captures tissue architecture and major lineages, but not the functional immune states measured by spatial transcriptomics.</p>
     </div>
   </article>
 </section>

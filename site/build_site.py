@@ -96,6 +96,17 @@ def viewer_data(out: Path) -> dict:
     return config
 
 
+HOME_LINK = ('<a href="{href}" style="position:fixed;top:12px;right:16px;z-index:9999;font:500 13px/1.2 system-ui,-apple-system,sans-serif;'
+             'padding:7px 13px;border-radius:999px;background:#0f6e78;color:#fff;text-decoration:none;'
+             'box-shadow:0 2px 8px rgba(0,0,0,.25)">&larr; Project home</a>')
+
+
+def with_home_link(html: str, href: str) -> str:
+    """Generated pages (nbconvert notebooks, the Snakemake report) get a small fixed link back to the project home page."""
+    head, sep, tail = html.rpartition("</body>")   # the last one: embedded scripts may contain the string "</body>"
+    return head + HOME_LINK.format(href=href) + sep + tail if sep else html
+
+
 def notebooks(out: Path) -> None:
     from nbconvert import HTMLExporter
 
@@ -103,7 +114,7 @@ def notebooks(out: Path) -> None:
     (out / "notebooks").mkdir(parents=True, exist_ok=True)
     for name in NOTEBOOKS:
         html, _ = exporter.from_filename(str(xu.REPO_ROOT / "notebooks" / f"{name}.ipynb"))
-        (out / "notebooks" / f"{name}.html").write_text(html, encoding="utf-8")
+        (out / "notebooks" / f"{name}.html").write_text(with_home_link(html, "../"), encoding="utf-8")
         print(f"  notebook {name}: {len(html) / 1e6:.1f} MB")
 
 
@@ -115,7 +126,7 @@ def static(out: Path, report: Path) -> None:
     for f in (xu.REPO_ROOT / "images").iterdir():
         shutil.copy(f, out / "images" / f.name)
     shutil.copy(xu.REPO_ROOT / "workflow" / "rulegraph.png", out / "images" / "rulegraph.png")
-    shutil.copy(report, out / "report.html")
+    (out / "report.html").write_text(with_home_link(report.read_text(encoding="utf-8"), "./"), encoding="utf-8")
     (out / ".nojekyll").write_text("")          # Jekyll would skip the zarr metadata files (.zattrs, .zarray)
 
 

@@ -1,0 +1,17 @@
+{
+  "column-order": [
+    "lineage",
+    "cell_type",
+    "niche",
+    "banksy",
+    "cellcharter",
+    "tls_id",
+    "cd8_compartment",
+    "immune_tile_phenotype",
+    "leiden_0.5",
+    "tenx_graphclust"
+  ],
+  "_index": "_index",
+  "encoding-type": "dataframe",
+  "encoding-version": "0.2.0"
+}

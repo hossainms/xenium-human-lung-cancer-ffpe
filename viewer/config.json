@@ -1,0 +1,262 @@
+{
+ "version": "1.0.16",
+ "name": "Xenium human lung cancer FFPE: 139,129 cells",
+ "description": "High-confidence cells; colour by cell set or by gene (lognormalised counts). Analysis by MD Shakhaowat Hossain, PhD Candidate, Tulane University School of Medicine.",
+ "datasets": [
+  {
+   "uid": "A",
+   "name": "Xenium lung cancer",
+   "files": [
+    {
+     "fileType": "anndata.zarr",
+     "url": "https://hossainms.github.io/xenium-human-lung-cancer-ffpe/viewer/cells.zarr",
+     "options": {
+      "obsSpots": {
+       "path": "obsm/spatial"
+      },
+      "obsEmbedding": [
+       {
+        "path": "obsm/X_umap",
+        "dims": [
+         0,
+         1
+        ],
+        "embeddingType": "UMAP"
+       }
+      ],
+      "obsSets": [
+       {
+        "name": "Lineage",
+        "path": "obs/lineage"
+       },
+       {
+        "name": "Cell type",
+        "path": "obs/cell_type"
+       },
+       {
+        "name": "Niche (Step 7)",
+        "path": "obs/niche"
+       },
+       {
+        "name": "Domain: BANKSY",
+        "path": "obs/banksy"
+       },
+       {
+        "name": "Domain: CellCharter",
+        "path": "obs/cellcharter"
+       },
+       {
+        "name": "TLS-like aggregate",
+        "path": "obs/tls_id"
+       },
+       {
+        "name": "CD8 T compartment",
+        "path": "obs/cd8_compartment"
+       },
+       {
+        "name": "Immune phenotype (400 um tile)",
+        "path": "obs/immune_tile_phenotype"
+       },
+       {
+        "name": "Leiden 0.5",
+        "path": "obs/leiden_0.5"
+       },
+       {
+        "name": "10x graph clustering",
+        "path": "obs/tenx_graphclust"
+       }
+      ],
+      "obsFeatureMatrix": {
+       "path": "X"
+      }
+     },
+     "coordinationValues": {
+      "obsType": "cell",
+      "featureType": "gene",
+      "featureValueType": "expression"
+     }
+    }
+   ]
+  }
+ ],
+ "coordinationSpace": {
+  "dataset": {
+   "A": "A"
+  },
+  "embeddingType": {
+   "A": "UMAP"
+  },
+  "obsType": {
+   "A": "cell"
+  },
+  "obsSetSelection": {
+   "A": null
+  },
+  "obsSetColor": {
+   "A": null
+  },
+  "featureSelection": {
+   "A": null
+  },
+  "obsColorEncoding": {
+   "A": "cellSetSelection"
+  },
+  "spatialTargetX": {
+   "A": 5492.94189453125
+  },
+  "spatialTargetY": {
+   "A": 2020.9681396484375
+  },
+  "spatialZoom": {
+   "A": -3.9420974254608154
+  },
+  "spotLayer": {
+   "init_A_obsSpots_0": "__dummy__"
+  },
+  "spatialSpotRadius": {
+   "init_A_obsSpots_0": 4.0
+  },
+  "spatialLayerVisible": {
+   "init_A_obsSpots_0": true
+  },
+  "spatialLayerOpacity": {
+   "init_A_obsSpots_0": 1.0
+  },
+  "featureValueColormapRange": {
+   "init_A_obsSpots_0": [
+    0,
+    1
+   ]
+  },
+  "metaCoordinationScopes": {
+   "init_A_obsSpots_0": {
+    "spotLayer": [
+     "init_A_obsSpots_0"
+    ]
+   }
+  },
+  "metaCoordinationScopesBy": {
+   "init_A_obsSpots_0": {
+    "spotLayer": {
+     "obsType": {
+      "init_A_obsSpots_0": "A"
+     },
+     "obsSetSelection": {
+      "init_A_obsSpots_0": "A"
+     },
+     "obsSetColor": {
+      "init_A_obsSpots_0": "A"
+     },
+     "featureSelection": {
+      "init_A_obsSpots_0": "A"
+     },
+     "obsColorEncoding": {
+      "init_A_obsSpots_0": "A"
+     },
+     "spatialSpotRadius": {
+      "init_A_obsSpots_0": "init_A_obsSpots_0"
+     },
+     "spatialLayerVisible": {
+      "init_A_obsSpots_0": "init_A_obsSpots_0"
+     },
+     "spatialLayerOpacity": {
+      "init_A_obsSpots_0": "init_A_obsSpots_0"
+     },
+     "featureValueColormapRange": {
+      "init_A_obsSpots_0": "init_A_obsSpots_0"
+     }
+    }
+   }
+  }
+ },
+ "layout": [
+  {
+   "component": "spatialBeta",
+   "coordinationScopes": {
+    "dataset": "A",
+    "spatialTargetX": "A",
+    "spatialTargetY": "A",
+    "spatialZoom": "A",
+    "metaCoordinationScopes": [
+     "init_A_obsSpots_0"
+    ],
+    "metaCoordinationScopesBy": [
+     "init_A_obsSpots_0"
+    ]
+   },
+   "x": 0,
+   "y": 0,
+   "w": 6,
+   "h": 6,
+   "props": {
+    "title": "Tissue (um)"
+   }
+  },
+  {
+   "component": "layerControllerBeta",
+   "coordinationScopes": {
+    "dataset": "A",
+    "spatialTargetX": "A",
+    "spatialTargetY": "A",
+    "spatialZoom": "A",
+    "metaCoordinationScopes": [
+     "init_A_obsSpots_0"
+    ],
+    "metaCoordinationScopesBy": [
+     "init_A_obsSpots_0"
+    ]
+   },
+   "x": 6,
+   "y": 3,
+   "w": 6,
+   "h": 3
+  },
+  {
+   "component": "scatterplot",
+   "coordinationScopes": {
+    "dataset": "A",
+    "embeddingType": "A",
+    "obsType": "A",
+    "obsSetSelection": "A",
+    "obsSetColor": "A",
+    "featureSelection": "A",
+    "obsColorEncoding": "A"
+   },
+   "x": 6,
+   "y": 0,
+   "w": 6,
+   "h": 3
+  },
+  {
+   "component": "obsSets",
+   "coordinationScopes": {
+    "dataset": "A",
+    "obsType": "A",
+    "obsSetSelection": "A",
+    "obsSetColor": "A",
+    "featureSelection": "A",
+    "obsColorEncoding": "A"
+   },
+   "x": 0,
+   "y": 6,
+   "w": 6,
+   "h": 6
+  },
+  {
+   "component": "featureList",
+   "coordinationScopes": {
+    "dataset": "A",
+    "obsType": "A",
+    "obsSetSelection": "A",
+    "obsSetColor": "A",
+    "featureSelection": "A",
+    "obsColorEncoding": "A"
+   },
+   "x": 6,
+   "y": 6,
+   "w": 6,
+   "h": 6
+  }
+ ],
+ "initStrategy": "auto"
+}

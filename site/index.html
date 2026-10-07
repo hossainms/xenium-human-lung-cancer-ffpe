@@ -6,11 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Xenium Lung Cancer Immune Landscape</title>
   <meta name="description"
-    content="An end-to-end, single-cell analysis of the tumour immune microenvironment in a public 10x Genomics Xenium lung adenocarcinoma section, with every key finding tested against technical artefacts.">
+    content="An end-to-end, single-cell analysis of the tumour immune microenvironment in a public 10x Genomics Xenium lung adenocarcinoma section, with the key findings re-tested against technical artefacts.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Mapping the Immune Landscape of Lung Cancer with Xenium Spatial Transcriptomics">
   <meta property="og:description"
-    content="An end-to-end, single-cell analysis of the tumour immune microenvironment in a public 10x Genomics Xenium lung adenocarcinoma section, with every key finding tested against technical artefacts.">
+    content="An end-to-end, single-cell analysis of the tumour immune microenvironment in a public 10x Genomics Xenium lung adenocarcinoma section, with the key findings re-tested against technical artefacts.">
   <meta property="og:url" content="https://hossainms.github.io/xenium-human-lung-cancer-ffpe/">
   <meta property="og:image"
     content="https://hossainms.github.io/xenium-human-lung-cancer-ffpe/images/overview_figure.jpg">
@@ -39,7 +39,7 @@
         Medicine</p>
       <p class="lede">An end-to-end, single-cell analysis of the tumour immune microenvironment in a public Xenium
         tissue section,
-        with every key finding tested against technical artefacts. It is built three ways (Python notebooks, an
+        with the key findings re-tested against technical artefacts. It is built three ways (Python notebooks, an
         independent
         R / Bioconductor replication and a reproducible Snakemake workflow); the Python notebooks and the workflow share one tested Python package, <code>ist_analysis</code>.
       </p>
@@ -99,16 +99,9 @@
         <div class="text">
           <span class="num">1</span>
           <h3>Predominantly CD8-excluded tumour regions</h3>
-          <p>Only 12% of CD8+ T cells were located within 15 &micro;m of a tumour cell, compared with 34% of non-tumour
-            cells
-            overall. Macrophages, dendritic cells and fibroblasts were prominent along the tumour boundary.</p>
-          <p>At the 400 &micro;m tile scale, 65% of tumour-containing tiles were classified as <em>immune-excluded</em>,
-            26% as
-            <em>immune deserts</em> and 9% as <em>inflamed</em>. Python and R analyses produced identical tile
-            classifications.
-          </p>
-          <p>Together, these results suggest a predominantly CD8-excluded spatial pattern in this tissue section, with
-            relatively few inflamed regions.</p>
+          <p>Only 12% of GZMK+ CD8 T cells lay within 15 &micro;m of a tumour cell, compared with 34% of non-tumour cells overall, whereas alveolar and FCGR1A+ macrophages, cDC2 cells and fibroblasts lay closer to tumour cells than this baseline.</p>
+          <p>Of the 119 tumour-containing 400 &micro;m tiles scored, 65% were classified as immune-excluded, 26% as immune-desert and 9% as inflamed under the default thresholds; excluded remained the most frequent label across all nine threshold settings tested (50&ndash;75% of tiles), and the R replication reproduced the same overall split.</p>
+          <p>These labels are operational, based on centroid distances and density thresholds. Together, these results suggest a predominantly CD8-excluded spatial pattern in this tissue section, with relatively few inflamed regions.</p>
         </div>
         <figure><img src="images/immune_phenotypes.png" alt="Map of immune phenotypes per 400 micrometre tumour tile"
             loading="lazy"></figure>
@@ -118,15 +111,9 @@
         <div class="text">
           <span class="num">2</span>
           <h3>Six TLS-like aggregates show organised lymphoid architecture</h3>
-          <p>Six tertiary lymphoid structure (TLS)-like aggregates were identified across the tissue section. These
-            aggregates featured B-cell-rich cores surrounded by T-cell rims; the largest (TLS1) showed the corresponding
-            lymphoid architecture on the matched H&amp;E.</p>
-          <p>The proportion of CCR7-expressing CD8+ T cells was 36% within the aggregates and 11% at the tumour border
-            (within 15 &micro;m of tumour cells). Contacts between CCL19-expressing and CCR7-expressing cells were
-            enriched 2.4-fold relative to a spatial permutation null that shuffles expression within cell types, and the
-            CCR7 difference persisted after cell re-segmentation.</p>
-          <p>Together, these results are consistent with organised lymphoid niches in this section, with distinct CD8+
-            T-cell states near the aggregates and at the tumour border.</p>
+          <p>Six tertiary lymphoid structure (TLS)-like aggregates contained 71% of B cells. Each combined B cells (22&ndash;65% of cells) with T / NK cells (17&ndash;50%), mregDCs and CCL19-expressing cells, with few tumour cells; the largest (TLS1) corresponds to a dense lymphoid aggregate on the matched H&amp;E.</p>
+          <p>CCR7 was detected in 36% of GZMK+ CD8 T cells within the aggregates and in 11% of those within 15 &micro;m of tumour cells. Graph contacts between CCL19-positive and CCR7-positive cells were 2.35-fold the expectation under a null that shuffles expression within cell types, and the CCR7 difference persisted after cell re-segmentation.</p>
+          <p>Together, these results are consistent with organised lymphoid niches in this section, with distinct CD8+ T-cell states near the aggregates and near the tumour. The aggregates are termed TLS-like because TLS-maturity markers (CXCL13, CR2, CCL21) are absent from the panel, and contact enrichment indicates spatial co-occurrence rather than demonstrated signalling.</p>
         </div>
         <figure><img src="images/tls_lineage_map.jpg" alt="Cell lineage map with the TLS-like aggregates marked"
             loading="lazy">
@@ -158,10 +145,9 @@
           <p>Proseg re-segmentation reduced the proportion of T / NK cells containing neighbouring epithelial
             transcripts from 19% to 1.5%. CD8 exclusion persisted (12% versus 34% within 15 &micro;m of tumour cells),
             all six TLS-like aggregates were re-identified within 3&ndash;9 &micro;m of their original locations, and
-            CCR7 expression remained higher in CD8+ T cells within the aggregates than at the tumour border (25% versus
+            CCR7 expression remained higher in GZMK+ CD8 T cells within the aggregates than within 15 &micro;m of tumour cells (25% versus
             9%).</p>
-          <p>Lineage annotations agreed with the Lung Cancer Atlas (LuCA; 892,000 cells) for 92% of high-confidence
-            cells.</p>
+          <p>Lineage annotations agreed with the Lung Cancer Atlas (LuCA; 892,000 cells) for 92% of high-confidence cells, with lower agreement for T / NK cells (63%). Conventional CD4 T cells remained unresolved under both segmentations.</p>
           <p>These checks support robustness to segmentation spillover within this tissue section; they do not establish
             consistency across patients.</p>
         </div>
